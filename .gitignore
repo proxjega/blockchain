@@ -1044,3 +1044,16 @@ dkms.conf
 # Raspberry Pi Pico disassembler file
 *.dis
 /.vscode
+# Ignore all object files
+*.o
+
+# Ignore all binary executables
+*.out
+*.exe
+*.bin
+
+# (Optional) Ignore build directories
+/build/
+/bin/
+/obj/
+*.
