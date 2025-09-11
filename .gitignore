@@ -1057,3 +1057,4 @@ dkms.conf
 /bin/
 /obj/
 *.
+/main
