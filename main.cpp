@@ -32,7 +32,7 @@ string HashFunction(string input){
         // cout << "USN " <<uniqueStringNumber << endl;
         counter++;
     }
-    cout << "USN: " << uniqueStringNumber << endl;
+    // cout << "USN: " << uniqueStringNumber << endl;
     mt19937 engine(uniqueStringNumber+3);
     uniform_int_distribution<int> indexDistribution(0, HASH_LENGTH - 1);
     uniform_int_distribution<int> randomDistribution(0, 15);
