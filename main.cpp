@@ -1,32 +1,51 @@
 #include <bitset>
+#include <cstddef>
+#include <cstdlib>
 #include <fstream>
+#include <functional>
+#include <ios>
 #include <iostream>
 #include <filesystem>
 #include <sstream>
 #include <vector>
 #include <random>
 #include <cmath>
+#include <iomanip>
 
 using namespace std; 
 
 int HashFunction(string input){
-    constexpr int HASH_LENGTH = 32;
-    vector<bitset<8>> bitVector;
+    constexpr int HASH_LENGTH = 64;
+    int hash[HASH_LENGTH];
+    vector<int> bitVector;
     bitVector.reserve(input.length()*2);
-    long int uniqueStringNumber = 0;
+    long int uniqueStringNumber = 1;
     int counter = 0;
     for (char c : input) {
-        bitVector.push_back(bitset<8>(c));
         int castedChar = static_cast<int>(c);
-        if (counter % 2 == 0) uniqueStringNumber+=castedChar;
+        bitVector.push_back(castedChar);
+        if (counter % 4 == 0) uniqueStringNumber = abs(uniqueStringNumber) - 255;
+        if (counter % 3 == 0) uniqueStringNumber = (uniqueStringNumber+1) * -1;
+        if (counter % 2 == 0) uniqueStringNumber+=castedChar+1;
         else uniqueStringNumber-=castedChar;
-        cout << uniqueStringNumber << endl;
+        // cout << "castedchar " << castedChar << endl;
+        // cout << "USN " <<uniqueStringNumber << endl;
         counter++;
     }
     cout << "USN: " << uniqueStringNumber << endl;
-    mt19937 engine(uniqueStringNumber);
-    uniform_int_distribution<int> distInt(1, 16);
-    cout << distInt(engine) << endl;
+    mt19937 engine(uniqueStringNumber+3);
+    uniform_int_distribution<int> indexDistribution(0, HASH_LENGTH - 1);
+    uniform_int_distribution<int> randomDistribution(0, 15);
+    for (auto el : bitVector) {
+        hash[indexDistribution(engine)]+= el;
+    }
+
+    for (int i = 0; i < HASH_LENGTH; i++) {
+        hash[i]+= randomDistribution(engine);
+        hash[i]=hash[i]%16;
+        cout << hex << hash[i];
+    }
+    cout << endl;
     return 0;
 }
 
