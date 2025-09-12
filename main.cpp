@@ -3,11 +3,30 @@
 #include <iostream>
 #include <filesystem>
 #include <sstream>
+#include <vector>
+#include <random>
+#include <cmath>
 
 using namespace std; 
 
 int HashFunction(string input){
-    
+    constexpr int HASH_LENGTH = 32;
+    vector<bitset<8>> bitVector;
+    bitVector.reserve(input.length()*2);
+    long int uniqueStringNumber = 0;
+    int counter = 0;
+    for (char c : input) {
+        bitVector.push_back(bitset<8>(c));
+        int castedChar = static_cast<int>(c);
+        if (counter % 2 == 0) uniqueStringNumber+=castedChar;
+        else uniqueStringNumber-=castedChar;
+        cout << uniqueStringNumber << endl;
+        counter++;
+    }
+    cout << "USN: " << uniqueStringNumber << endl;
+    mt19937 engine(uniqueStringNumber);
+    uniform_int_distribution<int> distInt(1, 16);
+    cout << distInt(engine) << endl;
     return 0;
 }
 
@@ -28,7 +47,6 @@ int main(int argc, char** argv) {
     std::ostringstream buffer;
     buffer << file.rdbuf();
     std::string content = buffer.str();
-
-    std::cout << content << endl; // prints UTF-8 directly
-
+    HashFunction(content);
+    // HashFunction("Abc");
 }
