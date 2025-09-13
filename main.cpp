@@ -7,6 +7,7 @@
 #include <iostream>
 #include <filesystem>
 #include <sstream>
+#include <string>
 #include <vector>
 #include <random>
 #include <cmath>
@@ -14,7 +15,7 @@
 
 using namespace std; 
 
-string HashFunction(string input){
+string HashFunction(const string &input){
     constexpr int HASH_LENGTH = 64;
     int hash[HASH_LENGTH];
     vector<int> integerVector;
@@ -54,6 +55,46 @@ string HashFunction(string input){
     return hexstr;
 }
 
+void OneCharTestFileGen(){
+    for (int i = 0; i < 256; i++) {
+        ofstream testFile("testcases/testOneChar" + to_string(i) + ".txt");
+        testFile << static_cast<char>(i);
+        testFile.close();
+    }
+}
+
+void RandomCharTestFileGen(){
+    for (int i = 0; i < 100; i++) {
+        ofstream testFile("testcases/testRandomChars" + to_string(i) + ".txt");
+        random_device rd;
+        mt19937 mt(rd());
+        uniform_int_distribution<int> dist(32, 126);
+        for (int j = 0; j <1000; j++) {
+            testFile << static_cast<char>(dist(mt));
+        }
+        testFile.close();
+    }
+}
+
+void HashTestFiles(){
+    string path = "testcases";
+    vector<string> files;
+
+    for (const auto& entry : filesystem::directory_iterator(path)) {
+        if (entry.is_regular_file()) {
+            files.push_back(entry.path().filename().string());
+        }
+    }
+
+    for (const auto& name : files) {
+        ifstream file(name, ios::binary);
+        ostringstream buffer;
+        buffer << file.rdbuf();
+        string content = buffer.str();
+        HashFunction(content);
+    }
+}
+
 int main(int argc, char** argv) {
     // argument handling
     if (argc < 2) {
@@ -67,10 +108,11 @@ int main(int argc, char** argv) {
     cout << "Hashing file: \"" << argv[1] << "\": "<< endl;
 
     // reading file
-    std::ifstream file(argv[1], std::ios::binary);
-    std::ostringstream buffer;
+    ifstream file(argv[1], ios::binary);
+    ostringstream buffer;
     buffer << file.rdbuf();
-    std::string content = buffer.str();
+    string content = buffer.str();
     HashFunction(content);
-    // HashFunction("Abc");
+    
+    HashTestFiles();
 }
