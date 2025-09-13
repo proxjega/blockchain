@@ -44,18 +44,14 @@ string HashFunction(const string &input){
     }
     for (int i = 0; i < HASH_LENGTH; i++) {
         hash[i]+= randomDistribution(engine);
-        cout << hash[i] << " ";
         hash[i]=hash[i]%16;
-        cout << hash[i] << " ";
     }
-    cout << "\n";
     // convert to string
     ostringstream oss;
     for (int i = 0; i < HASH_LENGTH; i++) {
         oss << std::hex << hash[i];
     }
     string hexstr = oss.str();
-    cout << hexstr << "\n";
     return hexstr;
 }
 
@@ -79,6 +75,18 @@ void RandomCharTestFileGen(){
         testFile.close();
     }
 }
+void RandomCharOneDifferentTestFileGen(){
+    for (int i = 0; i < 100; i++) {
+        ofstream testFile("testcases/testRandomCharsOneDifferent" + to_string(i) + ".txt");
+        mt19937 mt(1);
+        uniform_int_distribution<int> dist(32, 126);
+        testFile << static_cast<char>(i+32);
+        for (int j = 1; j <1000; j++) {
+            testFile << static_cast<char>(dist(mt));
+        }
+        testFile.close();
+    }
+}
 
 void HashTestFiles(){
     string path = "testcases";
@@ -90,24 +98,45 @@ void HashTestFiles(){
         }
     }
 
+    ofstream hashResults("hashResults.txt");
     for (const auto& name : files) {
         ifstream file( "testcases/" + name, ios::binary);
         ostringstream buffer;
         buffer << file.rdbuf();
         string content = buffer.str();
         // cout << content << endl;
-        cout << "Hash from " << left << setw(25) << name << ": ";
-        HashFunction(content);
+        string hash = HashFunction(content);
+        hashResults << hash << "\n";
+    }
+    cout << "Results saved to hashResults.txt\n";
+}
+
+void CheckHashesForCollision(string resultFileName){
+    ifstream resultFile(resultFileName);
+    if (!resultFile) {
+        cout << "File not found\n";
+        return;
+    }
+    cout << "Checking results for collisions...\n";
+    string line;
+    while (getline(resultFile, line)) {
+        cout << line << endl;
+        string secondLine;
+        while (getline(resultFile, secondLine)) {
+            if (line.compare(secondLine)==0) cout << "COLLISION FOUND!\n";
+        }
     }
 }
 
 int main(int argc, char** argv) {
     // argument handling
+    CheckHashesForCollision("hashResults.txt");
     if (argc < 2) {
         cout << "Specify the file to Hash!\n";
         return 0;
     }
-    if (argv[1] == "test") {
+    string test = "test";
+    if (test.compare(argv[1]) == 0) {
         cout << "Testing test files...\n";
         HashTestFiles();
         return 0;
@@ -123,6 +152,6 @@ int main(int argc, char** argv) {
     ostringstream buffer;
     buffer << file.rdbuf();
     string content = buffer.str();
-    HashFunction(content);
-    
+    string hash = HashFunction(content);
+    cout << hash << "\n";
 }
