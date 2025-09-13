@@ -6,6 +6,7 @@
 #include <ios>
 #include <iostream>
 #include <filesystem>
+#include <ostream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -24,6 +25,7 @@ string HashFunction(const string &input){
     int counter = 0;
     for (char c : input) {
         int castedChar = static_cast<int>(c);
+        if (castedChar < 0) castedChar*= -1;
         integerVector.push_back(castedChar);
         if (counter % 4 == 0) uniqueStringNumber = abs(uniqueStringNumber) - 255;
         if (counter % 3 == 0) uniqueStringNumber = (uniqueStringNumber+1) * -1;
@@ -42,16 +44,18 @@ string HashFunction(const string &input){
     }
     for (int i = 0; i < HASH_LENGTH; i++) {
         hash[i]+= randomDistribution(engine);
+        cout << hash[i] << " ";
         hash[i]=hash[i]%16;
+        cout << hash[i] << " ";
     }
-
+    cout << "\n";
     // convert to string
     ostringstream oss;
-    for (int i = 0; i < 64; i++)
+    for (int i = 0; i < HASH_LENGTH; i++) {
         oss << std::hex << hash[i];
-
+    }
     string hexstr = oss.str();
-    cout << hexstr << endl;
+    cout << hexstr << "\n";
     return hexstr;
 }
 
@@ -87,10 +91,12 @@ void HashTestFiles(){
     }
 
     for (const auto& name : files) {
-        ifstream file(name, ios::binary);
+        ifstream file( "testcases/" + name, ios::binary);
         ostringstream buffer;
         buffer << file.rdbuf();
         string content = buffer.str();
+        // cout << content << endl;
+        cout << "Hash from " << left << setw(25) << name << ": ";
         HashFunction(content);
     }
 }
@@ -98,14 +104,19 @@ void HashTestFiles(){
 int main(int argc, char** argv) {
     // argument handling
     if (argc < 2) {
-        cout << "Specify the file to Hash!" << endl;
+        cout << "Specify the file to Hash!\n";
+        return 0;
+    }
+    if (argv[1] == "test") {
+        cout << "Testing test files...\n";
+        HashTestFiles();
         return 0;
     }
     if (!filesystem::exists(argv[1])) {
-        cout << "File \"" << argv[1] << "\" does not exists!" << endl;
+        cout << "File \"" << argv[1] << "\" does not exists!\n";
         return 0;
     }
-    cout << "Hashing file: \"" << argv[1] << "\": "<< endl;
+    cout << "Hashing file: \"" << argv[1] << "\": \n";
 
     // reading file
     ifstream file(argv[1], ios::binary);
@@ -114,5 +125,4 @@ int main(int argc, char** argv) {
     string content = buffer.str();
     HashFunction(content);
     
-    HashTestFiles();
 }
