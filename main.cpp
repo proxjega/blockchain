@@ -55,7 +55,7 @@ string HashFunction(const string &input){
     return hexstr;
 }
 
-void OneCharTestFileGen(){
+void GenerateOneCharTestFiles(){
     for (int i = 0; i < 256; i++) {
         ofstream testFile("testcases/testOneChar" + to_string(i) + ".txt");
         testFile << static_cast<char>(i);
@@ -63,7 +63,7 @@ void OneCharTestFileGen(){
     }
 }
 
-void RandomCharTestFileGen(){
+void GenerateRandomCharactersTestFiles(){
     for (int i = 0; i < 100; i++) {
         ofstream testFile("testcases/testRandomChars" + to_string(i) + ".txt");
         random_device rd;
@@ -75,7 +75,7 @@ void RandomCharTestFileGen(){
         testFile.close();
     }
 }
-void RandomCharOneDifferentTestFileGen(){
+void GenerateRandomCharactersOneDifferentTestFiles(){
     for (int i = 0; i < 100; i++) {
         ofstream testFile("testcases/testRandomCharsOneDifferent" + to_string(i) + ".txt");
         mt19937 mt(1);
@@ -127,19 +127,42 @@ void CheckHashesForCollision(string resultFileName){
         }
     }
 }
-
+//to do: switch case for argument handling, fix checkHashes for collision;
 int main(int argc, char** argv) {
     // argument handling
-    CheckHashesForCollision("hashResults.txt");
     if (argc < 2) {
-        cout << "Specify the file to Hash!\n";
+        cout << "Specify the option or file to Hash!\n";
         return 0;
     }
-    string test = "test";
-    if (test.compare(argv[1]) == 0) {
-        cout << "Testing test files...\n";
-        HashTestFiles();
-        return 0;
+    char option;
+    if (argv[1][0]=='-') {
+        option = argv[1][1];
+    }
+    switch (option) {
+        case 't':
+            cout << "Testing test files...\n";
+            HashTestFiles();
+            return 0;
+            break;
+        case 'o':
+            cout << "Generating one char test files...\n";
+            GenerateOneCharTestFiles();
+            return 0;
+            break;
+        case 'r':
+            cout << "Generating random character test files... \n";
+            GenerateRandomCharactersTestFiles();
+            return 0;
+            break;
+        case 'd':
+            cout << "Generating random characters but one different test files... \n";
+            GenerateRandomCharactersOneDifferentTestFiles();
+            return 0;
+            break;
+        case 'c':
+            cout << "Checking result file for collisions...\n";
+            CheckHashesForCollision("hashResults.txt");
+            return 0;
     }
     if (!filesystem::exists(argv[1])) {
         cout << "File \"" << argv[1] << "\" does not exists!\n";
