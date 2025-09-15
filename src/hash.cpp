@@ -1,5 +1,5 @@
 // hashfunction
-#include "hash.h"
+#include "../include/hash.h"
 
 string HashFunction(const string &input){
     constexpr int HASH_LENGTH = 64;

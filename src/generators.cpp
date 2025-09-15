@@ -1,5 +1,5 @@
 //functions which generates files (for testing)
-#include "generators.h"
+#include "../include/generators.h"
 
 void GenerateOneCharTestFiles(){
     for (int i = 0; i < 256; i++) {

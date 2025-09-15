@@ -28,3 +28,6 @@ string HashFunction(const string &input);
 void GenerateRandomCharactersTestFiles();
 void GenerateRandomCharactersOneDifferentTestFiles();
 void GenerateOneCharTestFiles();
+void HashTestFiles();
+void CheckHashesForCollision(string resultFileName);
+void CheckKonstitucija();
