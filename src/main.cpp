@@ -5,7 +5,7 @@ int main(int argc, char** argv) {
     // argument handling
     if (argc < 2) {
         cout << "Specify the option or file to Hash!\n";
-        cout << "-t - hash all files from /testcases\n -o - generate one char test files\n -r - generate 1000 random string files\n -d - generate random string files but with one different char\n -c - check resultHash.txt for collisions\n";
+        cout << "-t - hash all files from /testcases\n -g - generate test files\n -c - check resultHash.txt for collisions\n";
         return 0;
     }
     char option;
@@ -18,18 +18,10 @@ int main(int argc, char** argv) {
             HashTestFiles();
             return 0;
             break;
-        case 'o':
-            cout << "Generating one char test files...\n";
+        case 'g':
+            cout << "Generating files...\n";
             GenerateOneCharTestFiles();
-            return 0;
-            break;
-        case 'r':
-            cout << "Generating random character test files... \n";
             GenerateRandomCharactersTestFiles();
-            return 0;
-            break;
-        case 'd':
-            cout << "Generating random characters but one different test files... \n";
             GenerateRandomCharactersOneDifferentTestFiles();
             return 0;
             break;
