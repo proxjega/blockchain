@@ -64,7 +64,7 @@ void GenerateOneCharTestFiles(){
 }
 
 void GenerateRandomCharactersTestFiles(){
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 1000; i++) {
         ofstream testFile("testcases/testRandomChars" + to_string(i) + ".txt");
         random_device rd;
         mt19937 mt(rd());
@@ -76,7 +76,7 @@ void GenerateRandomCharactersTestFiles(){
     }
 }
 void GenerateRandomCharactersOneDifferentTestFiles(){
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 256; i++) {
         ofstream testFile("testcases/testRandomCharsOneDifferent" + to_string(i) + ".txt");
         mt19937 mt(1);
         uniform_int_distribution<int> dist(32, 126);
@@ -117,13 +117,14 @@ void CheckHashesForCollision(string resultFileName){
         cout << "File not found\n";
         return;
     }
-    cout << "Checking results for collisions...\n";
     string line;
+    vector<string> lines;
     while (getline(resultFile, line)) {
-        cout << line << endl;
-        string secondLine;
-        while (getline(resultFile, secondLine)) {
-            if (line.compare(secondLine)==0) cout << "COLLISION FOUND!\n";
+        lines.push_back(line);
+    }
+    for (size_t i = 0; i < lines.size(); i++) {
+        for (size_t j = i+1; j < lines.size(); j++) {
+            if(lines[i]==lines[j]) cout << "Collision found!: \n";
         }
     }
 }
