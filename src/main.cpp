@@ -5,7 +5,7 @@ int main(int argc, char** argv) {
     // argument handling
     if (argc < 2) {
         cout << "Specify the option or file to Hash!\n";
-        cout << "-t - hash all files from /testcases\n -g - generate test files\n -c - check resultHash.txt for collisions\n";
+        cout << "-t - hash all files from /testcases\n -g - generate test files\n -c - check results/HashedLineByLine.txt for collisions\n -a - check for avalanche effect\n -k - konstitucija.txt test";
         return 0;
     }
     char option;
@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
             break;
         case 'c':
             cout << "Checking result file for collisions...\n";
-            CheckHashesForCollision("results/HashedLineByLine.txt");
+            CheckHashesForCollision("results/hashResults.txt");
             return 0;
             break;
         case 'k':
@@ -38,7 +38,11 @@ int main(int argc, char** argv) {
             CheckKonstitucija();
             return 0;
             break;
-
+        case 'a':
+            cout << "Checking for avalanche effect...\n";
+            CheckHashesForAvalancheEffect("results/hashResults.txt");
+            return 0;
+            break;
     }
     if (!std::filesystem::exists(argv[1])) {
         cout << "File \"" << argv[1] << "\" does not exists!\n";

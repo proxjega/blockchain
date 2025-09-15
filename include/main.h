@@ -33,3 +33,4 @@ void CheckHashesForCollision(string resultFileName);
 void CheckKonstitucija();
 void GenerateFileForCollisionTest();
 void HashTestFileLineByLine(string filename);
+void CheckHashesForAvalancheEffect(string filename);
