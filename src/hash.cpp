@@ -3,7 +3,6 @@
 
 string HashFunction(const string &input){
     constexpr int HASH_LENGTH = 64;
-    int hash[HASH_LENGTH];
     vector<int> integerVector;
     integerVector.reserve(input.length()*2);
     long int uniqueStringNumber = 1;
@@ -24,6 +23,10 @@ string HashFunction(const string &input){
     mt19937 engine(uniqueStringNumber+3);
     uniform_int_distribution<int> indexDistribution(0, HASH_LENGTH - 1);
     uniform_int_distribution<int> randomDistribution(0, 15);
+    int hash[HASH_LENGTH];
+    for (int i = 0; i < HASH_LENGTH; i++) {
+        hash[i]=0;
+    }
     for (auto el : integerVector) {
         hash[indexDistribution(engine)]+= el;
     }

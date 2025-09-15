@@ -1,5 +1,6 @@
 #include "../include/helpers.h"
 
+// hashes all files in testcases/ directory, and puts all hashes into one file
 void HashTestFiles(){
     string path = "testcases";
     vector<string> files;
@@ -20,12 +21,29 @@ void HashTestFiles(){
         string hash = HashFunction(content);
         hashResults << hash << "\n";
     }
+    hashResults.close();
     cout << "Results saved to hashResults.txt\n";
 }
 
+// hashes one file line by line, and puts hashes into one file
+void HashTestFileLineByLine(string filename) {
+    ifstream file(filename);
+    if (!file){
+        cout << "File not found!\n";
+        return;
+    }
+    ofstream resultFile("results/HashedLineByLine.txt");
+    string line;
+    while (getline(file,line)) {
+        string hash = HashFunction(line);
+        resultFile << hash << "\n";
+        line.clear();
+    }
+}
 
-void CheckHashesForCollision(string resultFileName){
-    ifstream resultFile(resultFileName);
+// checks hash file for collisions (compares each line with eachother)
+void CheckHashesForCollision(string fileName){
+    ifstream resultFile(fileName);
     if (!resultFile) {
         cout << "File not found\n";
         return;

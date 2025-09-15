@@ -31,3 +31,5 @@ void GenerateOneCharTestFiles();
 void HashTestFiles();
 void CheckHashesForCollision(string resultFileName);
 void CheckKonstitucija();
+void GenerateFileForCollisionTest();
+void HashTestFileLineByLine(string filename);

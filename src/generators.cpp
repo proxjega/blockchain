@@ -1,6 +1,64 @@
 //functions which generates files (for testing)
 #include "../include/generators.h"
 
+void GenerateFileForCollisionTest(){
+    ofstream file("testcases/collisionTest.txt");
+    random_device rd;
+    mt19937 mt(rd());
+    uniform_int_distribution<int> dist(32, 126);
+    for (int i = 0; i < 100000; i++){
+
+        for (int j = 0; j < 10; j++) {
+            file << static_cast<char>(dist(mt));
+        }
+        file << "\n";
+
+        for (int j = 0; j < 100; j++) {
+            file << static_cast<char>(dist(mt));
+        }
+        file << "\n";
+
+        for (int j = 0; j < 500; j++) {
+            file << static_cast<char>(dist(mt));
+        }
+        file << "\n";
+
+        for (int j = 0; j < 1000; j++) {
+            file << static_cast<char>(dist(mt));
+        }
+        file << "\n";
+    }
+}
+
+void GenerateFileForAvalancheEffectTest(){
+    ofstream file("testcases/avalancheTest.txt");
+    random_device rd;
+    mt19937 mt(rd());
+    uniform_int_distribution<int> dist(32, 126);
+    for (int i = 0; i < 100000; i++){
+
+        for (int j = 0; j < 10; j++) {
+            file << static_cast<char>(dist(mt));
+        }
+        file << "\n";
+
+        for (int j = 0; j < 100; j++) {
+            file << static_cast<char>(dist(mt));
+        }
+        file << "\n";
+
+        for (int j = 0; j < 500; j++) {
+            file << static_cast<char>(dist(mt));
+        }
+        file << "\n";
+
+        for (int j = 0; j < 1000; j++) {
+            file << static_cast<char>(dist(mt));
+        }
+        file << "\n";
+    }
+}
+
 void GenerateOneCharTestFiles(){
     for (int i = 0; i < 256; i++) {
         ofstream testFile("testcases/testOneChar" + to_string(i) + ".txt");

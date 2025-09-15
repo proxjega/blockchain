@@ -16,6 +16,8 @@ int main(int argc, char** argv) {
         case 't':
             cout << "Testing test files...\n";
             HashTestFiles();
+            cout << "Hashing collisionTest.txt...\n";
+            HashTestFileLineByLine("testcases/collisionTest.txt");
             return 0;
             break;
         case 'g':
@@ -23,11 +25,12 @@ int main(int argc, char** argv) {
             GenerateOneCharTestFiles();
             GenerateRandomCharactersTestFiles();
             GenerateRandomCharactersOneDifferentTestFiles();
+            GenerateFileForCollisionTest();
             return 0;
             break;
         case 'c':
             cout << "Checking result file for collisions...\n";
-            CheckHashesForCollision("hashResults.txt");
+            CheckHashesForCollision("results/HashedLineByLine.txt");
             return 0;
             break;
         case 'k':
