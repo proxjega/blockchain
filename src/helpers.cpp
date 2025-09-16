@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <bitset>
 #include <cstddef>
+#include <iomanip>
 #include <iostream>
 #include <numeric>
 #include <string>
@@ -125,6 +126,8 @@ void AvalancheTest(string fileName) {
     string word, hex1, hex2;
     vector<double> hexDifferences;
     vector<double> bitDifferences;
+    hexDifferences.reserve(400000);
+    bitDifferences.reserve(400000);
     while (!file.eof()) {
         file >> word;
         hex1 = HashFunction(word);
@@ -135,7 +138,8 @@ void AvalancheTest(string fileName) {
         for (size_t k = 0; k < hex1.size(); k++){
             if (hex1[k] == hex2[k]) sameChars++;
         }
-        double hexDifference = sameChars * 1.0 / 64.0 * 100;
+        // if(sameChars==64) cout << word << "\n";
+        double hexDifference = static_cast<double>(sameChars)  / 64.0 * 100.0;
         hexDifferences.push_back(hexDifference);
         
         int sameBits = 0;
@@ -144,17 +148,18 @@ void AvalancheTest(string fileName) {
         for (int k = 0; k < 256; k++) {
             if(bitset1[k] == bitset2[k]) sameBits++;
         }
-        double bitDifference = sameBits * 1.0 / 256.0 * 100;
+        // if(sameBits==256) cout << word << "\n";
+        double bitDifference = static_cast<double>(sameBits) / 256.0 * 100.0;
         bitDifferences.push_back(bitDifference);
     }
     
     ofstream resultFile("results/avalancheResults.txt");
     resultFile << "Results from " << fileName << "\n";
-    resultFile << "HEX:\nmax: " << *std::max_element(hexDifferences.begin(), hexDifferences.end()) << "\n"
-    << "min: " <<*std::min_element(hexDifferences.begin(), hexDifferences.end()) << "\n"
-    << "avg: " << std::accumulate(hexDifferences.begin(), hexDifferences.end(), 0) / hexDifferences.size() << "\n";
-    resultFile << "BIT:\nmax: " << *std::max_element(bitDifferences.begin(), hexDifferences.end()) << "\n"
-    << "min: " <<*std::min_element(bitDifferences.begin(), bitDifferences.end()) << "\n"
-    << "avg: " << std::accumulate(bitDifferences.begin(), bitDifferences.end(), 0) / bitDifferences.size() << "\n";
+    resultFile << "HEX:\nmax: " << std::setprecision(5) << *std::max_element(hexDifferences.begin(), hexDifferences.end()) << "\n"
+    << "min: " << std::setprecision(5) << *std::min_element(hexDifferences.begin(), hexDifferences.end()-1) << "\n"
+    << "avg: " << std::setprecision(5) << std::accumulate(hexDifferences.begin(), hexDifferences.end()-1, 0) / hexDifferences.size() << "\n";
+    resultFile << "BIT:\nmax: " << std::setprecision(5) << *std::max_element(bitDifferences.begin(), hexDifferences.end()) << "\n"
+    << "min: " << std::setprecision(5) << *std::min_element(bitDifferences.begin(), bitDifferences.end()-1) << "\n"
+    << "avg: " << std::setprecision(5) <<  std::accumulate(bitDifferences.begin(), bitDifferences.end()-1, 0) / bitDifferences.size() << "\n";
 }
 
