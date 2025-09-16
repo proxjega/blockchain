@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <bitset>
 #include <cstddef>
+#include <iostream>
 #include <numeric>
 #include <string>
 
@@ -67,22 +68,23 @@ void HashTestFileLineByLine(string filename) {
 }
 
 // checks hash file for collisions (compares each line with eachother)
-void CheckHashesForCollision(string fileName){
-    ifstream resultFile(fileName);
-    if (!resultFile) {
+void CollisionTest(string fileName){
+    ifstream file(fileName);
+    if (!file) {
         cout << "File not found\n";
         return;
     }
-    string line;
-    vector<string> lines;
-    while (getline(resultFile, line)) {
-        lines.push_back(line);
+    string word, hex1, hex2;
+    int collisionNum = 0;
+    while (!file.eof()) {
+        file >> word;
+        hex1 = HashFunction(word);
+        word.clear();
+        file >> word;
+        hex2 = HashFunction(word);
+        if (hex1.compare(hex2) == 0) collisionNum++;
     }
-    for (size_t i = 0; i < lines.size(); i++) {
-        for (size_t j = i+1; j < lines.size(); j++) {
-            if(lines[i]==lines[j]) cout << "Collision found!: \n";
-        }
-    }
+    cout << "Found " << collisionNum << " collisions.\n";
 }
 
 void CheckKonstitucija(){
@@ -114,40 +116,40 @@ void CheckKonstitucija(){
     }
 }
 
-void CheckHashesForAvalancheEffect(string filename) {
-    ifstream file(filename);
-    if (!file){
-        cout << "File not found!\n";
+void AvalancheTest(string fileName) {
+    ifstream file(fileName);
+    if (!file) {
+        cout << "File not found\n";
         return;
     }
-    string line;
-    vector<string> lines;
-    while (getline(file, line)) {
-        lines.push_back(line);
-    }
+    string word, hex1, hex2;
     vector<double> hexDifferences;
     vector<double> bitDifferences;
-    for (size_t i = 0; i < lines.size(); i++) {
-        for (size_t j = i+1; j < lines.size(); j++) {
-            int sameChars = 0;
-            for (size_t k = 0; k < lines[i].size(); k++){
-                if (lines[i][k] == lines[j][k]) sameChars++;
-            }
-            double hexDifference = sameChars * 1.0 / 64.0 * 100;
-            hexDifferences.push_back(hexDifference);
-            
-            int sameBits = 0;
-            std::bitset<256> bitset1(HexToBin(lines[i]));
-            std::bitset<256> bitset2(HexToBin(lines[j]));
-            for (int k = 0; k < 256; k++) {
-                if(bitset1[k] == bitset2[k]) sameBits++;
-            }
-            double bitDifference = sameBits * 1.0 / 256.0 * 100;
-            bitDifferences.push_back(bitDifference);
+    while (!file.eof()) {
+        file >> word;
+        hex1 = HashFunction(word);
+        word.clear();
+        file >> word;
+        hex2 = HashFunction(word);
+        int sameChars = 0;
+        for (size_t k = 0; k < hex1.size(); k++){
+            if (hex1[k] == hex2[k]) sameChars++;
         }
+        double hexDifference = sameChars * 1.0 / 64.0 * 100;
+        hexDifferences.push_back(hexDifference);
+        
+        int sameBits = 0;
+        std::bitset<256> bitset1(HexToBin(hex1));
+        std::bitset<256> bitset2(HexToBin(hex2));
+        for (int k = 0; k < 256; k++) {
+            if(bitset1[k] == bitset2[k]) sameBits++;
+        }
+        double bitDifference = sameBits * 1.0 / 256.0 * 100;
+        bitDifferences.push_back(bitDifference);
     }
+    
     ofstream resultFile("results/avalancheResults.txt");
-    resultFile << "Results from " << filename << "\n";
+    resultFile << "Results from " << fileName << "\n";
     resultFile << "HEX:\nmax: " << *std::max_element(hexDifferences.begin(), hexDifferences.end()) << "\n"
     << "min: " <<*std::min_element(hexDifferences.begin(), hexDifferences.end()) << "\n"
     << "avg: " << std::accumulate(hexDifferences.begin(), hexDifferences.end(), 0) / hexDifferences.size() << "\n";

@@ -5,9 +5,13 @@ void GenerateFileForCollisionTest(){
     ofstream file("testcases/collisionTest.txt");
     random_device rd;
     mt19937 mt(rd());
-    uniform_int_distribution<int> dist(32, 126);
+    uniform_int_distribution<int> dist(33, 126);
     for (int i = 0; i < 100000; i++){
 
+        for (int j = 0; j < 10; j++) {
+            file << static_cast<char>(dist(mt));
+        }
+        file << " ";
         for (int j = 0; j < 10; j++) {
             file << static_cast<char>(dist(mt));
         }
@@ -16,13 +20,25 @@ void GenerateFileForCollisionTest(){
         for (int j = 0; j < 100; j++) {
             file << static_cast<char>(dist(mt));
         }
+        file << " ";
+        for (int j = 0; j < 100; j++) {
+            file << static_cast<char>(dist(mt));
+        }
         file << "\n";
 
         for (int j = 0; j < 500; j++) {
             file << static_cast<char>(dist(mt));
         }
+        file << " ";
+        for (int j = 0; j < 500; j++) {
+            file << static_cast<char>(dist(mt));
+        }
         file << "\n";
 
+        for (int j = 0; j < 1000; j++) {
+            file << static_cast<char>(dist(mt));
+        }
+        file << " ";
         for (int j = 0; j < 1000; j++) {
             file << static_cast<char>(dist(mt));
         }
@@ -34,28 +50,41 @@ void GenerateFileForAvalancheEffectTest(){
     ofstream file("testcases/avalancheTest.txt");
     random_device rd;
     mt19937 mt(rd());
-    uniform_int_distribution<int> dist(32, 126);
+    uniform_int_distribution<int> dist(33, 126);
     for (int i = 0; i < 100000; i++){
-
+        
+        string word;
         for (int j = 0; j < 10; j++) {
-            file << static_cast<char>(dist(mt));
+            word+= static_cast<char>(dist(mt));
         }
-        file << "\n";
+        file << word << " ";
+        word[0]= static_cast<char>(dist(mt));
+        file << word << "\n";
+        word.clear();
 
         for (int j = 0; j < 100; j++) {
-            file << static_cast<char>(dist(mt));
+            word+= static_cast<char>(dist(mt));
         }
-        file << "\n";
+        file << word << " ";
+        word[0]= static_cast<char>(dist(mt));
+        file << word << "\n";
+        word.clear();
 
         for (int j = 0; j < 500; j++) {
-            file << static_cast<char>(dist(mt));
+            word+= static_cast<char>(dist(mt));
         }
-        file << "\n";
+        file << word << " ";
+        word[0]= static_cast<char>(dist(mt));
+        file << word << "\n";
+        word.clear();
 
         for (int j = 0; j < 1000; j++) {
-            file << static_cast<char>(dist(mt));
+            word+= static_cast<char>(dist(mt));
         }
-        file << "\n";
+        file << word << " ";
+        word[0]= static_cast<char>(dist(mt));
+        file << word << "\n";
+        word.clear();
     }
 }
 

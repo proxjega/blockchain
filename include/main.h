@@ -28,9 +28,12 @@ string HashFunction(const string &input);
 void GenerateRandomCharactersTestFiles();
 void GenerateRandomCharactersOneDifferentTestFiles();
 void GenerateOneCharTestFiles();
-void HashTestFiles();
-void CheckHashesForCollision(string resultFileName);
-void CheckKonstitucija();
 void GenerateFileForCollisionTest();
+void GenerateFileForAvalancheEffectTest();
+
+void HashTestFiles();
+void CollisionTest(string fileName);
+void AvalancheTest(string fileName);
+
+void CheckKonstitucija();
 void HashTestFileLineByLine(string filename);
-void CheckHashesForAvalancheEffect(string filename);

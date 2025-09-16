@@ -26,11 +26,12 @@ int main(int argc, char** argv) {
             GenerateRandomCharactersTestFiles();
             GenerateRandomCharactersOneDifferentTestFiles();
             GenerateFileForCollisionTest();
+            GenerateFileForAvalancheEffectTest();
             return 0;
             break;
         case 'c':
             cout << "Checking result file for collisions...\n";
-            CheckHashesForCollision("results/hashResults.txt");
+            CollisionTest("testcases/collisionTest.txt");
             return 0;
             break;
         case 'k':
@@ -40,7 +41,7 @@ int main(int argc, char** argv) {
             break;
         case 'a':
             cout << "Checking for avalanche effect...\n";
-            CheckHashesForAvalancheEffect("results/hashResults.txt");
+            AvalancheTest("testcases/avalancheTest.txt");
             return 0;
             break;
     }
