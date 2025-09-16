@@ -34,6 +34,7 @@ void GenerateFileForAvalancheEffectTest();
 void HashTestFiles();
 void CollisionTest(string fileName);
 void AvalancheTest(string fileName);
+void Negriztamumas();
 
 void CheckKonstitucija();
 void HashTestFileLineByLine(string filename);

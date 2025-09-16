@@ -164,3 +164,8 @@ void AvalancheTest(string fileName) {
     << "avg: " << std::setprecision(5) <<  std::accumulate(bitDifferences.begin(), bitDifferences.end()-1, 0) / bitDifferences.size() << "\n";
 }
 
+void Negriztamumas(){
+    cout << "Hash(\"text\"): \n" << HashFunction("text") << "\n";
+    cout << "Hash(\"text\" + \"salt\"): \n" << HashFunction("textsalt") << "\n";
+}
+

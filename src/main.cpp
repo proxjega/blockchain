@@ -43,6 +43,11 @@ int main(int argc, char** argv) {
             AvalancheTest("testcases/avalancheTest.txt");
             return 0;
             break;
+        case 'n':
+            cout << "Negriztamumo demostracija:\n";
+            Negriztamumas();
+            return 0;
+            break;
     }
     if (!std::filesystem::exists(argv[1])) {
         cout << "File \"" << argv[1] << "\" does not exists!\n";
