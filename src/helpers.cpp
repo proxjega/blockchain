@@ -138,7 +138,7 @@ void AvalancheTest(string fileName) {
         for (size_t k = 0; k < hex1.size(); k++){
             if (hex1[k] == hex2[k]) sameChars++;
         }
-        // if(sameChars==64) cout << word << "\n";
+        // if(sameChars==64) cout << word << "\n\n\n";
         double hexDifference = static_cast<double>(sameChars)  / 64.0 * 100.0;
         hexDifferences.push_back(hexDifference);
         

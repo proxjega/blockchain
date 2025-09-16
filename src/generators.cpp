@@ -58,7 +58,7 @@ void GenerateFileForAvalancheEffectTest(){
             word+= static_cast<char>(dist(mt));
         }
         file << word << " ";
-        word[0]= static_cast<char>(static_cast<int>(word[0])+1+33%256);
+        word[0]=='a' ? word[0]='b' : word[0]='a'; 
         file << word << "\n";
         word.clear();
 
@@ -66,7 +66,7 @@ void GenerateFileForAvalancheEffectTest(){
             word+= static_cast<char>(dist(mt));
         }
         file << word << " ";
-        word[0]= static_cast<char>(static_cast<int>(word[0]+1+33%256));
+        word[0]=='a' ? word[0]='b' : word[0]='a'; 
         file << word << "\n";
         word.clear();
 
@@ -74,7 +74,7 @@ void GenerateFileForAvalancheEffectTest(){
             word+= static_cast<char>(dist(mt));
         }
         file << word << " ";
-        word[0]= static_cast<char>(static_cast<int>(word[0]+1+33%256));
+        word[0]=='a' ? word[0]='b' : word[0]='a'; 
         file << word << "\n";
         word.clear();
 
@@ -82,7 +82,7 @@ void GenerateFileForAvalancheEffectTest(){
             word+= static_cast<char>(dist(mt));
         }
         file << word << " ";
-        word[0]= static_cast<char>(static_cast<int>(word[0]+1+33%256));
+        word[0]=='a' ? word[0]='b' : word[0]='a'; 
         file << word << "\n";
         word.clear();
     }

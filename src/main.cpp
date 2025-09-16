@@ -32,6 +32,7 @@ int main(int argc, char** argv) {
         case 'c':
             cout << "Checking result file for collisions...\n";
             CollisionTest("testcases/collisionTest.txt");
+            // CollisionTest("testcases/avalancheTest.txt");
             return 0;
             break;
         case 'k':
