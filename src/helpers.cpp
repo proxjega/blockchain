@@ -68,7 +68,7 @@ void HashTestFileLineByLine(string filename) {
     }
 }
 
-// checks hash file for collisions (compares each line with eachother)
+// hashes string pairs and check for collisions
 void CollisionTest(string fileName){
     ifstream file(fileName);
     if (!file) {
@@ -117,6 +117,7 @@ void CheckKonstitucija(){
     }
 }
 
+// hashes string pairs and checks for avalanche effect
 void AvalancheTest(string fileName) {
     ifstream file(fileName);
     if (!file) {
