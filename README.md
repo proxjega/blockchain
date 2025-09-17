@@ -61,7 +61,16 @@ string HashFunction(string input) {
 ### Skirtumai (procentais):<br />
 <img width="706" height="377" alt="image" src="https://github.com/user-attachments/assets/fcc72ca5-ee17-4adc-b91c-a69f6cdb3738" /><br />
 ### 7. Negrižtamumo demonstacija:<br />
-<img width="840" height="180" alt="image" src="https://github.com/user-attachments/assets/eab67981-1658-4a67-b455-f1f5136282e1" />
+<img width="840" height="180" alt="image" src="https://github.com/user-attachments/assets/eab67981-1658-4a67-b455-f1f5136282e1" /> <br />
+## Išvada: 
+### Stiprumai:
+- Hashas veikie
+- Yra deterministiškumas
+- Labai mažai kolizijų
+- Veikia greitai (suhashinti 512 eilutes reikėjo 2ms)
+- Lavinos effektas: Hashai panašūs vidutiniškai 16%
+### Silpnumai:
+- Yra maža tikimybė gauti koliziją (stringai turi skirtis vienu simbolių ant 16 vienetų (pagal ascii lentelę), ir dar turi būti toks random generatoriaus seed'as, kuris nepridės prie to simbolio nieko.
 
 
 
