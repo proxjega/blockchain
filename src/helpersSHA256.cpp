@@ -1,69 +1,9 @@
 #include "../include/helpers.h"
+string HexToBin(const std::string& hex);
 
-
-std::string HexToBin(const std::string& hex) {
-    std::string bin;
-    bin.reserve(hex.size() * 4);
-
-    for (char c : hex) {
-        int val;
-        if (c >= '0' && c <= '9') val = c - '0';
-        else if (c >= 'a' && c <= 'f') val = 10 + (c - 'a');
-        else if (c >= 'A' && c <= 'F') val = 10 + (c - 'A');
-        else throw std::invalid_argument("Invalid hex digit");
-
-        for (int i = 3; i >= 0; --i)
-            bin.push_back(((val >> i) & 1) ? '1' : '0');
-    }
-
-    return bin;
-}
-
-// hashes all files in testcases/ directory, and puts all hashes into one file
-void HashTestFiles(){
-    string path = "testcases";
-    vector<string> files;
-
-    for (const auto& entry : std::filesystem::directory_iterator(path)) {
-        if (entry.is_regular_file()) {
-            files.push_back(entry.path().filename().string());
-        }
-    }
-
-    ofstream hashResults("results/hashResults.txt");
-    for (const auto& name : files) {
-        ifstream file( "testcases/" + name, ios::binary);
-        ostringstream buffer;
-        buffer << file.rdbuf();
-        string content = buffer.str();
-        // cout << content << endl;
-        string hash = HashFunction(content);
-        hashResults << hash << "\n";
-    }
-    hashResults.close();
-    cout << "Results saved to hashResults.txt\n";
-}
-
-// hashes one file line by line, and puts hashes into one file
-void HashTestFileLineByLine(string filename) {
-    ifstream file(filename);
-    if (!file){
-        cout << "File not found!\n";
-        return;
-    }
-    string name = filename.substr(filename.find('/'));
-    name = name.erase(name.size()-4);
-    ofstream resultFile("results/" + name + "HashedLineByLine.txt");
-    string line;
-    while (getline(file,line)) {
-        string hash = HashFunction(line);
-        resultFile << hash << "\n";
-        line.clear();
-    }
-}
 
 // hashes string pairs and check for collisions
-void CollisionTest(string fileName){
+void CollisionTestSHA256(string fileName){
     ifstream file(fileName);
     if (!file) {
         cout << "File not found\n";
@@ -73,23 +13,23 @@ void CollisionTest(string fileName){
     int collisionNum = 0;
     while (!file.eof()) {
         file >> word;
-        hex1 = HashFunction(word);
+        hex1 = sha256(word);
         word.clear();
         file >> word;
-        hex2 = HashFunction(word);
+        hex2 = sha256(word);
         if (hex1.compare(hex2) == 0) collisionNum++;
     }
     cout << "Found " << collisionNum << " collisions.\n";
 }
 
-void CheckKonstitucija(){
+void CheckKonstitucijaSHA256(){
     ifstream file("konstitucija.txt");
     if (!file){
         cout << "File not found!\n";
         return;
     }
     string text;
-    ofstream resultFile("results/konstitucijaResults.txt");
+    ofstream resultFile("results/konstitucijaResultsSHA256.txt");
     for (int i = 1; i < 789; i*=2){
         text.clear();
         file.close();
@@ -102,7 +42,7 @@ void CheckKonstitucija(){
         double avgTime;
         auto start = std::chrono::high_resolution_clock::now();
         for (int k = 0; k < 5; k++) {
-            string hash = HashFunction(text);
+            string hash = sha256(text);
         }
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> diff = end - start;
@@ -112,7 +52,7 @@ void CheckKonstitucija(){
 }
 
 // hashes string pairs and checks for avalanche effect
-void AvalancheTest(string fileName) {
+void AvalancheTestSHA256(string fileName) {
     ifstream file(fileName);
     if (!file) {
         cout << "File not found\n";
@@ -125,10 +65,10 @@ void AvalancheTest(string fileName) {
     bitDifferences.reserve(400000);
     while (!file.eof()) {
         file >> word;
-        hex1 = HashFunction(word);
+        hex1 = sha256(word);
         word.clear();
         file >> word;
-        hex2 = HashFunction(word);
+        hex2 = sha256(word);
         int sameChars = 0;
         for (size_t k = 0; k < hex1.size(); k++){
             if (hex1[k] == hex2[k]) sameChars++;
@@ -148,7 +88,7 @@ void AvalancheTest(string fileName) {
         bitDifferences.push_back(bitDifference);
     }
     
-    ofstream resultFile("results/avalancheResults.txt");
+    ofstream resultFile("results/avalancheResultsSHA256.txt");
     resultFile << "Results from " << fileName << "\n";
     resultFile << "HEX:\nmax: " << std::setprecision(5) << *std::max_element(hexDifferences.begin(), hexDifferences.end()) << "\n"
     << "min: " << std::setprecision(5) << *std::min_element(hexDifferences.begin(), hexDifferences.end()-1) << "\n"
@@ -158,8 +98,5 @@ void AvalancheTest(string fileName) {
     << "avg: " << std::setprecision(5) <<  std::accumulate(bitDifferences.begin(), bitDifferences.end()-1, 0) / bitDifferences.size() << "\n";
 }
 
-void Negriztamumas(){
-    cout << "Hash(\"text\"): \n" << HashFunction("text") << "\n";
-    cout << "Hash(\"text\" + \"salt\"): \n" << HashFunction("textsalt") << "\n";
-}
+
 

@@ -38,3 +38,7 @@ void Negriztamumas();
 
 void CheckKonstitucija();
 void HashTestFileLineByLine(string filename);
+
+void CollisionTestSHA256(string fileName);
+void CheckKonstitucijaSHA256();
+void AvalancheTestSHA256(string fileName);

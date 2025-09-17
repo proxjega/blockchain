@@ -49,6 +49,14 @@ int main(int argc, char** argv) {
             Negriztamumas();
             return 0;
             break;
+        case 's':
+            cout << "Testing SHA256...\n";
+            AvalancheTestSHA256("testcases/avalancheTest.txt");
+            CollisionTestSHA256("testcases/collisionTest.txt");
+            CheckKonstitucijaSHA256();
+            return 0;
+            break;
+
     }
     if (!std::filesystem::exists(argv[1])) {
         cout << "File \"" << argv[1] << "\" does not exists!\n";
