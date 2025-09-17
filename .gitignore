@@ -1060,5 +1060,5 @@ dkms.conf
 /main
 konstitucija.txt
 test.txt
-*.txt
 /testcases/
+test2.txt

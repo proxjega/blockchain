@@ -1,0 +1,9 @@
+Results from testcases/avalancheTest.txt
+HEX:
+max: 25
+min: 0
+avg: 5
+BIT:
+max: 66.016
+min: 34.766
+avg: 49
