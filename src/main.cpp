@@ -12,6 +12,7 @@ int main(int argc, char** argv) {
     if (argv[1][0]=='-') {
         option = argv[1][1];
     }
+    
     switch (option) {
         case 't':
             cout << "Testing test files...\n";
