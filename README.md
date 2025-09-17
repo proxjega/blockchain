@@ -64,7 +64,7 @@ string HashFunction(string input) {
 <img width="840" height="180" alt="image" src="https://github.com/user-attachments/assets/eab67981-1658-4a67-b455-f1f5136282e1" /> <br />
 ## Išvada: 
 ### Stiprumai:
-- Hashas veikie
+- Hashas veikia
 - Yra deterministiškumas
 - Labai mažai kolizijų
 - Veikia greitai (suhashinti 512 eilutes reikėjo 2ms)
