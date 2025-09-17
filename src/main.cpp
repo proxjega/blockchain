@@ -5,7 +5,11 @@ int main(int argc, char** argv) {
     // argument handling
     if (argc < 2) {
         cout << "Specify the option or file to Hash!\n";
-        cout << " -t - hash all files from /testcases\n -g - generate test files\n -c - check results/HashedLineByLine.txt for collisions\n -a - check for avalanche effect\n -k - konstitucija.txt test";
+        cout << " -t - hash all files from /testcases\n";
+        cout << " -g - generate test files\n";
+        cout << " -c - hash \"testcases/collisionTest.txt\" and check for collisions\n";
+        cout << " -a - check for avalanche effect\n -k - konstitucija.txt test\n";
+        cout << " -s - check everything with SHA256 hash function\n";
         return 0;
     }
     char option;
