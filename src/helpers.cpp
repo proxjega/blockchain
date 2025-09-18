@@ -160,6 +160,8 @@ void AvalancheTest(string fileName) {
 
 void Negriztamumas(){
     cout << "Hash(\"text\"): \n" << HashFunction("text") << "\n";
-    cout << "Hash(\"text\" + \"salt\"): \n" << HashFunction("textsalt") << "\n";
+    cout << "Hash(\"text\" + salt): \n" << HashFunction("text", true) << "\n";
+    cout << "Hash(\"text\" + salt): \n" << HashFunction("text", true) << "\n";
+    cout << "Hash(\"text\" + salt): \n" << HashFunction("text", true) << "\n";
 }
 

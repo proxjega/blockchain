@@ -22,3 +22,4 @@ using std::ostringstream;
 using std::ios;
 string HashFunction(const string &input);
 string sha256(const string &str);
+string HashFunction(string input, bool salt);

@@ -44,7 +44,7 @@ string HashFunction(const string &input){
     return hexstr;
 }
 
-string HashFunction(string input, bool salt = false){
+string HashFunction(string input, bool salt){
     if (salt == true) {
         std::random_device rd;
         mt19937 engine(rd());
