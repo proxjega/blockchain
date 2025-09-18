@@ -72,7 +72,7 @@ string HashFunction(string input) {
 ### Panašumai (procentais):<br />
 <img width="706" height="377" alt="image" src="https://github.com/user-attachments/assets/fcc72ca5-ee17-4adc-b91c-a69f6cdb3738" /><br />
 ### 7. Negrižtamumo demonstacija:<br />
-<img width="840" height="180" alt="image" src="https://github.com/user-attachments/assets/eab67981-1658-4a67-b455-f1f5136282e1" /> <br />
+<img width="834" height="310" alt="image" src="https://github.com/user-attachments/assets/9e7c85f4-373f-4bc6-94e4-898c208f07e9" />  <br />
 ## Išvada: 
 ### Stiprumai:
 - Hashas veikia
