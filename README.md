@@ -81,9 +81,10 @@ string HashFunction(string input) {
 - Veikia greitai (suhashinti 512 eilutes reikėjo 2ms)
 - Lavinos effektas: Hashai panašūs vidutiniškai 16%
 ### Silpnumai:
-- Yra maža tikimybė gauti koliziją (stringai turi skirtis vienu simbolių ant 16 vienetų (pagal ascii lentelę), ir dar turi būti toks random generatoriaus seed'as, kuris nepridės prie to simbolio nieko.
+- Yra maža tikimybė gauti koliziją (stringai turi skirtis vienu simbolių ant 16 vienetų (pagal ascii lentelę), ir dar turi būti toks random generatoriaus seed'as, kuris nepridės prie to simbolio nieko).
 ## Palyginimas su SHA256:
 ### Buvo panaudota openssl biblioteka SHA256 funkcijai: <br />
+
 ```c++
 #include <openssl/evp.h>
 #include <openssl/err.h>
@@ -135,6 +136,7 @@ std::string sha256(const std::string &input) {
     return oss.str();
 }
 ```
+
 ### Su SHA256 buvo atlikti tie pat tyrimai (spartos su konstitucija.txt, kolizijų paieška, lavinos efekto patikrinimas):
 ### 1. Sparta: <br />
 <img width="808" height="407" alt="image" src="https://github.com/user-attachments/assets/91b01db4-ea65-463d-8d6d-2579bcf4281b" /> <br />
@@ -151,6 +153,7 @@ SHA256 veikia geriau ir greičiau.
 
 ## Palyginimas su AI generuota funkcija:
 ### AI sugeneravo tokia funkcija:
+
 ```c++
 std::string HashFunctionAI(const std::string &input) {
     constexpr int HASH_WORDS = 8;      // 8 * 32 = 256 bits
@@ -199,8 +202,8 @@ Matosi, kad AI algoritmas veikia greičiau negu mano, bet lečiau negu SHA256. <
 Kolizijų nėra (kaip ir pas mane) <br />
 ### 3. Lavinos efektas: <br />
 <img width="711" height="340" alt="image" src="https://github.com/user-attachments/assets/752c9a01-b6ef-45d7-a6be-8d35c59db4f5" /> <br />
-Ai funkcijoje vidutinis panašumas didesnis, ir hexo ir bitų lygmenyje. Bet nėra kolizijų (maksimalus panašumas nepasiekia 100). Tai galima pasakyti AI funkcija daugiau patikima.
-<br />
+Ai funkcijoje vidutinis panašumas didesnis, ir hexo ir bitų lygmenyje. Bet nėra kolizijų (maksimalus panašumas nepasiekia 100). Tai galima pasakyti AI funkcija daugiau patikima. <br />
+
 ### Išvada:
 AI sugeneravo geresni algoritmą negu mano, bet ne tokį kaip SHA256.
 
