@@ -42,3 +42,7 @@ void HashTestFileLineByLine(string filename);
 void CollisionTestSHA256(string fileName);
 void CheckKonstitucijaSHA256();
 void AvalancheTestSHA256(string fileName);
+
+void CollisionTestAI(string fileName);
+void CheckKonstitucijaAI();
+void AvalancheTestAI(string fileName);

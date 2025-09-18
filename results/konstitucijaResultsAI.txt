@@ -1,0 +1,10 @@
+Average time for hashing 1 lines: 0.001243ms
+Average time for hashing 2 lines: 0.0011734ms
+Average time for hashing 4 lines: 0.0013268ms
+Average time for hashing 8 lines: 0.0013408ms
+Average time for hashing 16 lines: 0.002542ms
+Average time for hashing 32 lines: 0.0044696ms
+Average time for hashing 64 lines: 0.0082688ms
+Average time for hashing 128 lines: 0.0194568ms
+Average time for hashing 256 lines: 0.0443752ms
+Average time for hashing 512 lines: 0.0965584ms

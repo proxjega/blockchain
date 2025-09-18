@@ -7,8 +7,8 @@ int main(int argc, char** argv) {
         cout << "Specify the option or file to Hash!\n";
         cout << " -t - hash all files from /testcases\n";
         cout << " -g - generate test files\n";
-        cout << " -c - hash \"testcases/collisionTest.txt\" and check for collisions\n";
-        cout << " -a - check for avalanche effect\n -k - konstitucija.txt test\n";
+        cout << " -m - check everything with my hash function\n";
+        cout << " -a - check everything with AI hash function\n";
         cout << " -s - check everything with SHA256 hash function\n";
         return 0;
     }
@@ -32,20 +32,19 @@ int main(int argc, char** argv) {
             GenerateFileForAvalancheEffectTest();
             return 0;
             break;
-        case 'c':
-            cout << "Checking result file for collisions...\n";
+        case 'm':
+            cout << "Checking my hashFunction...";
             CollisionTest("testcases/collisionTest.txt");
+            CheckKonstitucija();
+            AvalancheTest("testcases/avalancheTest.txt");
             // CollisionTest("testcases/avalancheTest.txt");
             return 0;
             break;
-        case 'k':
-            cout << "Checking konstitucija.txt file...\n";
-            CheckKonstitucija();
-            return 0;
-            break;
         case 'a':
-            cout << "Checking for avalanche effect...\n";
-            AvalancheTest("testcases/avalancheTest.txt");
+            cout << "Checking AI hashfunction\n";
+            CollisionTestAI("testcases/collisionTest.txt");
+            CheckKonstitucijaAI();
+            AvalancheTestAI("testcases/avalancheTest.txt");
             return 0;
             break;
         case 'n':
