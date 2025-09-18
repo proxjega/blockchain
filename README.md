@@ -149,6 +149,61 @@ Lavinos efektas geriau matomas SHA256. Hexo lygmeniu : vidutinis panašumas 9% m
 ### Išvada:
 SHA256 veikia geriau ir greičiau.
 
+## Palyginimas su AI generuota funkcija:
+### AI sugeneravo tokia funkcija:
+```c++
+std::string HashFunctionAI(const std::string &input) {
+    constexpr int HASH_WORDS = 8;      // 8 * 32 = 256 bits
+
+    uint32_t state[HASH_WORDS] = {
+        0x12345678u, 0x9abcdef0u, 0xdeadbeefu, 0xfeedfaceu,
+        0x0badc0deu, 0xcafebabeu, 0x8badf00du, 0x1337c0deu
+    };
+
+    // Mix each character into the state
+    for (size_t i = 0; i < input.size(); i++) {
+        uint32_t c = static_cast<unsigned char>(input[i]);
+        uint32_t pos = i % HASH_WORDS;
+
+        // XOR the character into the state
+        state[pos] ^= c + i;
+
+        // Rotate based on character value
+        state[pos] = rotl(state[pos], (c % 31) + 1);
+
+        // Shift and XOR with neighbor
+        uint32_t neighbor = state[(pos + 1) % HASH_WORDS];
+        state[pos] ^= rotr(neighbor, (i % 29) + 1);
+
+        // Add some constant (helps avalanche)
+        state[pos] += 0x9e3779b9u; // golden ratio
+    }
+
+    // Convert state into hex string
+    std::ostringstream oss;
+    for (int i = 0; i < HASH_WORDS; i++) {
+        oss << std::hex << std::setw(8) << std::setfill('0') << state[i];
+    }
+
+    return oss.str();
+}
+```
+
+### Su AI funkcija buvo atlikti tie pat tyrimai (spartos su konstitucija.txt, kolizijų paieška, lavinos efekto patikrinimas):
+### 1. Sparta: <br />
+<img width="859" height="394" alt="image" src="https://github.com/user-attachments/assets/62c9137a-aaad-43b9-84e0-bd832f0bf453" /> <br />
+<img width="725" height="451" alt="image" src="https://github.com/user-attachments/assets/6aefad7a-7b59-400f-8b6f-a30bfadf58f2" /> <br />
+Matosi, kad AI algoritmas veikia greičiau negu mano, bet lečiau negu SHA256. <br />
+### 2. Kolizijos: <br />
+<img width="856" height="91" alt="image" src="https://github.com/user-attachments/assets/688b5204-44d4-4f3a-9d1e-bf633b3dcbab" /> <br />
+Kolizijų nėra (kaip ir pas mane) <br />
+### 3. Lavinos efektas: <br />
+<img width="711" height="340" alt="image" src="https://github.com/user-attachments/assets/752c9a01-b6ef-45d7-a6be-8d35c59db4f5" /> <br />
+Ai funkcijoje vidutinis panašumas didesnis, ir hexo ir bitų lygmenyje. Bet nėra kolizijų (maksimalus panašumas nepasiekia 100). Tai galima pasakyti AI funkcija daugiau patikima.
+<br />
+### Išvada:
+AI sugeneravo geresni algoritmą negu mano, bet ne tokį kaip SHA256.
+
 
 
 
