@@ -1,5 +1,18 @@
 // hashfunction
-#include "../include/hash.h"
+#include <string>
+#include <vector>
+#include <sstream>
+#include <random>
+#include <iostream>
+#include <iomanip>
+
+using std::vector;
+using std::string;
+using std::mt19937;
+using std::uniform_int_distribution;
+using std::ostringstream;
+using std::cout;
+using std::endl;
 
 string HashFunction(const string &input){
     constexpr int HASH_LENGTH = 64;

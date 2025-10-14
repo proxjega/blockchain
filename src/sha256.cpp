@@ -3,7 +3,6 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include <vector>
 
 std::string sha256(const std::string &input) {
     // Create context
