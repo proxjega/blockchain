@@ -5,5 +5,5 @@ min: 0
 avg: 14
 BIT:
 max: 100
-min: 36.328
+min: 35.938
 avg: 53
