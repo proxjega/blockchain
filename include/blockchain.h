@@ -12,7 +12,7 @@ using std::list;
 
 class Transaction;
 
-struct BlockHeader{
+struct BlockHeader {
     string prevBlockHash;
     string timestamp;
     string version;
@@ -26,13 +26,35 @@ class Block {
         BlockHeader mHeader;
         vector<Transaction> mData;
     public:
+        //constructors and rule of five
         Block();
+        Block(const Block &BlockToCopy);
+        Block operator=(const Block &BlockToCopy);
+        Block(Block &&BlockToMove);
+        Block operator=(Block &&BlockToMove);
+        ~Block();
+
+        //getters and setters
+        BlockHeader getHeader() {return mHeader;}
+        vector<Transaction> getTransactions() {return mData;}
+        void setHeader(BlockHeader header);
+        void setTransactions(vector<Transaction> transactions);
+
+        bool Mine(long long int number);
 };
 
 class Blockchain {
     private:
-        list<Block> list;
+        list<Block> blockList;
     public:
-        void validateAndAddBlock(Block &BlockToAdd);
+        //constructors
         Blockchain();
+        ~Blockchain();
+
+        //getters and setters
+        Block getLastBlock() { return blockList.back();}
+        list<Block> getBlockChain() {return blockList;}
+
+
+        void validateAndAddBlock(Block &BlockToAdd);
 };
