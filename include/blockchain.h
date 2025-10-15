@@ -36,7 +36,7 @@ class Block {
 
         //getters and setters
         BlockHeader getHeader() {return mHeader;}
-        vector<Transaction> getTransactions() {return mData;}
+        vector<Transaction> getTransactions() ;
         void setHeader(BlockHeader header);
         void setTransactions(vector<Transaction> transactions);
 

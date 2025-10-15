@@ -11,6 +11,7 @@
 #include <iomanip>
 #include <iostream>
 #include <numeric>
+#include <format>
 #include <string>
 
 using std::cout;
@@ -189,5 +190,11 @@ void Negriztamumas(){
     cout << "Hash(\"text\" + salt): \n" << HashFunction("text", true) << "\n";
     cout << "Hash(\"text\" + salt): \n" << HashFunction("text", true) << "\n";
     cout << "Hash(\"text\" + salt): \n" << HashFunction("text", true) << "\n";
+}
+
+string GetCurrentTimeStamp(){
+    auto now = std::chrono::system_clock::now();
+    string time = std::format("{:%Y-%m-%d %H:%M:%S}", now);
+    return time;
 }
 

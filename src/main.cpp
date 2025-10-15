@@ -1,6 +1,7 @@
 #include "../include/main.h"
 
+string GetCurrentTimeStamp();
 
-int main(int argc, char** argv) {
-    
+int main() {
+    cout << GetCurrentTimeStamp() << "\n";    
 }

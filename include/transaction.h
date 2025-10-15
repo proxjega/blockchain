@@ -11,5 +11,6 @@ class Transaction {
         string mReceiver;
         int mAmount;
     public:
+        Transaction();
         Transaction(int id, const string& sender, const string& receiver, int amount);
 };
