@@ -43,9 +43,11 @@ Block::Block(const string &SatoshiKey){
     this->mHeader = header;
 }
 
-Block::Block(const unordered_map<string, Transaction> &memPool) {
-
-}
+// Block::Block(const unordered_map<string, Transaction> &memPool) {
+//     for (int i = 0; i < 100; i++) {
+//         memPool.b
+//     }
+// }
 
 
 void Block::CoutBlock() {
@@ -79,7 +81,7 @@ Blockchain::Blockchain(const string &satoshisKey) {
 
     // add genesis block
     Block genesisBlock(satoshisKey);
-    this->ExecuteTransactions(genesisBlock, users);
+    // this->ExecuteTransactions(genesisBlock, users);
     blockList.push_back(genesisBlock);
 }
 

@@ -67,6 +67,7 @@ class Blockchain {
         list<Block> blockList;
         unordered_map<string, User> users;
         unordered_map<string, Transaction> memPool;
+        vector<string> sortedTransactionHashes;
         
         // private methods (are called only by blockchain itself)
         void ExecuteTransactions(const Block &block, std::unordered_map<string, User> &users); //TODO
