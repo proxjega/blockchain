@@ -68,7 +68,7 @@ Blockchain::Blockchain(const string &satoshisKey) {
     // add genesis block
     Block genesisBlock(satoshisKey);
     blockList.push_back(genesisBlock);
-
+    
     
 }
 

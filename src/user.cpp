@@ -3,11 +3,6 @@
 string GenerateKey();
 int GenerateBalance();
 
-User::User(){
-    mName = "";
-    mPublicKey = "";
-    mBalance = 0;
-}
 
 User::User(const string &name) {
     mName = name;

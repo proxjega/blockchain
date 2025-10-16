@@ -9,7 +9,7 @@ class User {
         string mPublicKey;
         int mBalance;
     public:
-        User();
+        User() = default;
         User(const string &name);
         User(const string &name, const string &key, int balance);
         ~User();

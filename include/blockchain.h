@@ -3,6 +3,7 @@
 #include <array>
 #include <cstdint>
 #include <list>
+#include <unordered_map>
 #include <vector>
 #include <string>
 
@@ -10,6 +11,7 @@ using std::string;
 using std::vector;
 using std::array;
 using std::list;
+using std::unordered_map;
 
 class Transaction;
 class User;
@@ -36,14 +38,19 @@ class Block {
         BlockHeader mHeader;
         vector<Transaction> mData;
     public:
-        //constructors and rule of five
-        Block();
-        Block(const string &SatoshiKey);
+        //default constructor, destructor and rule of five
+        Block() = default;
         Block(const Block &BlockToCopy) = default;
-        // Block operator=(const Block &BlockToCopy);
-        // Block(Block &&BlockToMove);
-        // Block operator=(Block &&BlockToMove);
+        Block& operator=(const Block &BlockToCopy) = default;
+        Block(Block &&BlockToMove) = default;
+        Block& operator=(Block &&BlockToMove) = default;
         ~Block();
+
+        //genesis block
+        Block(const string &SatoshiKey);
+
+        //block with 100 random transactions
+        Block(const vector<Transaction> &memPool);
 
         //getters and setters
         BlockHeader getHeader() {return mHeader;}
@@ -59,6 +66,7 @@ class Blockchain {
     private:
         list<Block> blockList;
         vector<Transaction> memPool;
+        void ExecuteTransactions(const Block &block, std::unordered_map<string, User> &users); //TODO
     public:
         //constructors
         Blockchain(const string &satoshisKey);
@@ -72,5 +80,5 @@ class Blockchain {
         const vector<Transaction> &getMemPool() const {return memPool;}
 
         void GenerateMemPool(const vector<User> &users);
-        void validateAndAddBlock(Block &BlockToAdd);
+        void validateAndAddBlock(Block &BlockToAdd); // TODO
 };
