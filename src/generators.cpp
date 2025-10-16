@@ -134,7 +134,7 @@ string GenerateKey(){
     const string BASE58_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
     random_device rd;
     mt19937 mt(rd());
-    uniform_int_distribution<int> dist(0, BASE58_ALPHABET.size());
+    uniform_int_distribution<int> dist(0, BASE58_ALPHABET.size()-1);
     string key = "";
     for (int i = 0; i < 50; i++) {
         key.push_back(BASE58_ALPHABET.at(dist(mt)));

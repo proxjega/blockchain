@@ -12,6 +12,7 @@ using std::array;
 using std::list;
 
 class Transaction;
+class User;
 
 struct BlockHeader {
     // calculated by mining
@@ -56,15 +57,19 @@ class Block {
 class Blockchain {
     private:
         list<Block> blockList;
+        vector<Transaction> memPool;
     public:
         //constructors
-        Blockchain();
+        Blockchain(const string &satoshisKey);
         ~Blockchain();
 
         //getters and setters
         Block getLastBlock() { return blockList.back();}
-        list<Block> getBlockChain() {return blockList;}
+        
+        // protected getters 
+        const list<Block> &getBlockChain() const {return blockList;}
+        const vector<Transaction> &getMemPool() const {return memPool;}
 
-
+        void GenerateMemPool(const vector<User> &users);
         void validateAndAddBlock(Block &BlockToAdd);
 };
