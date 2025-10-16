@@ -10,10 +10,12 @@
 string GetCurrentTimeStamp();
 int main() {
     cout << GetCurrentTimeStamp() << "\n";  
-    User Satoshi("Satoshi Nakamoto");
-    ;
+    User Satoshi("Satoshi Nakamoto", "12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX", 50);
 
-   
+    //create blockchain
+    Blockchain Btc(Satoshi.getKey());
+    Btc.getLastBlock().CoutBlock();
+    
     // generate users
     std::unordered_map<string, User> users;
     users.reserve(1000);
@@ -29,8 +31,7 @@ int main() {
         usersVector.push_back(it->second);
     }
 
-    Blockchain Btc(Satoshi.getKey());
-    Btc.getLastBlock().CoutBlock();
+   
     //generate transactions
     Btc.GenerateMemPool(usersVector);
     // for (auto transaction : Btc.getMemPool()) {

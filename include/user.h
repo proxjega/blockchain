@@ -11,6 +11,7 @@ class User {
     public:
         User();
         User(const string &name);
+        User(const string &name, const string &key, int balance);
         ~User();
 
         string getName() {return mName; }
