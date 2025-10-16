@@ -202,7 +202,21 @@ string GetCurrentTimeStamp(){
     return time;
 }
 
-string MerkleRootHash(vector<Transaction> transactions) {
+string MerkleRootHash(const vector<Transaction> &transactions) {
+    vector<string> hashes;
+    for (auto transaction : transactions) {
+        hashes.push_back(transaction.getHash());
+    }
     
-}
+    while (hashes.size() != 1) {
+        if (hashes.size() % 2 != 0) hashes.push_back(hashes.front());
+        vector<string> newHashes;
+        for (int i = 0; i < hashes.size() - 1; i+=2) {
+            string newHash = HashFunction(hashes.at(i) + hashes.at(i+1));
+            newHashes.push_back(newHash);
+        }
+        hashes = newHashes;
+    }
+    return hashes.at(0);
+}   
 

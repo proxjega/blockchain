@@ -131,12 +131,13 @@ void GenerateRandomCharactersOneDifferentTestFiles(){
 }
 
 string GenerateKey(){
+    const string BASE58_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
     random_device rd;
     mt19937 mt(rd());
-    uniform_int_distribution<int> dist(33, 126);
+    uniform_int_distribution<int> dist(0, BASE58_ALPHABET.size());
     string key = "";
     for (int i = 0; i < 50; i++) {
-        key.push_back(static_cast<char>(dist(mt)));
+        key.push_back(BASE58_ALPHABET.at(dist(mt)));
     }
     return key;
 }
@@ -149,3 +150,4 @@ int GenerateBalance(){
     balance = dist(mt);
     return balance;
 }
+

@@ -14,13 +14,20 @@ using std::list;
 class Transaction;
 
 struct BlockHeader {
+    // calculated by mining
     string hash;
+    long long int nonce;
+
+    // calculated after block creation
     string prevBlockHash;
     string timestamp;
     string version;
     string merkleRootHash;
-    long long int nonce;
-    int difficultyTarget;   
+    int difficultyTarget;  
+
+    string ToString() {
+        return prevBlockHash + timestamp + version + merkleRootHash + std::to_string(difficultyTarget);
+    }
 };
 
 class Block {
