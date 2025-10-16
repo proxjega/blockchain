@@ -30,12 +30,13 @@ int main() {
     }
 
     Blockchain Btc(Satoshi.getKey());
+    Btc.getLastBlock().CoutBlock();
     //generate transactions
     Btc.GenerateMemPool(usersVector);
-    for (auto transaction : Btc.getMemPool()) {
-        cout << "TX: " << transaction.getID() <<" from:" << transaction.getSender() << 
-        " to:" << transaction.getReceiver() << " " << transaction.getAmount() << "\n hash: " << transaction.getHash() << "\n";
-    }
+    // for (auto transaction : Btc.getMemPool()) {
+    //     cout << "TX: " << transaction.getID() <<" from:" << transaction.getSender() << 
+    //     " to:" << transaction.getReceiver() << " " << transaction.getAmount() << "\n hash: " << transaction.getHash() << "\n";
+    // }
 
 
 }

@@ -39,10 +39,10 @@ class Block {
         //constructors and rule of five
         Block();
         Block(const string &SatoshiKey);
-        Block(const Block &BlockToCopy);
-        Block operator=(const Block &BlockToCopy);
-        Block(Block &&BlockToMove);
-        Block operator=(Block &&BlockToMove);
+        Block(const Block &BlockToCopy) = default;
+        // Block operator=(const Block &BlockToCopy);
+        // Block(Block &&BlockToMove);
+        // Block operator=(Block &&BlockToMove);
         ~Block();
 
         //getters and setters
@@ -50,7 +50,8 @@ class Block {
         vector<Transaction> getTransactions() ;
         void setHeader(BlockHeader header);
         void setTransactions(vector<Transaction> transactions);
-
+        
+        void CoutBlock();
         bool Mine(long long int number);
 };
 

@@ -3,6 +3,9 @@
 #include "../include/user.h"
 #include <random>
 #include <string>
+#include <iostream>
+
+using std::cout;
 
 string GetCurrentTimeStamp();
 string HashFunction(const string &input);
@@ -22,8 +25,9 @@ Block::Block(const string &SatoshiKey){
     header.version = 1;
     header.merkleRootHash = MerkleRootHash(mData);
     header.difficultyTarget = 1;
-    int nonce = 0;
+    long int nonce = 0;
     while (true) {
+        cout << nonce << "\n";
         string hash = HashFunction(header.ToString() + std::to_string(nonce));
         if (hash[0] == '0' && hash[1] == '0' && hash[2] == '0') {
             header.hash = hash;
@@ -32,7 +36,20 @@ Block::Block(const string &SatoshiKey){
         }
         nonce++;
     }
+    this->mHeader = header;
 }
+
+void Block::CoutBlock() {
+    cout << "Hash: " << mHeader.hash << "\n"
+    << "nonce: " << mHeader.nonce << "\n"
+    << "Previous block Hash: " << mHeader.prevBlockHash << "\n"
+    << "Timestamp: " << mHeader.timestamp << "\n"
+    << "version: " << mHeader.version << "\n"
+    << "Merkle root hash: " << mHeader.merkleRootHash << "\n"
+    << "Difficulty target: " << mHeader.difficultyTarget << "\n"
+    << "Number of transactions: " << mData.size() << "\n\n";
+}
+
 
 Block::~Block() {
     mHeader.hash.clear();
