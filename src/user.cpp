@@ -9,7 +9,7 @@ User::User(){
     mBalance = 0;
 }
 
-User::User(string name) {
+User::User(const string &name) {
     mName = name;
     mPublicKey = GenerateKey();
     mBalance = GenerateBalance();

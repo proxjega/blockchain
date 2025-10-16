@@ -10,7 +10,7 @@ class User {
         int mBalance;
     public:
         User();
-        User(string name);
+        User(const string &name);
         ~User();
 
         string getName() {return mName; }
