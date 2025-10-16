@@ -129,3 +129,23 @@ void GenerateRandomCharactersOneDifferentTestFiles(){
         testFile.close();
     }
 }
+
+string GenerateKey(){
+    random_device rd;
+    mt19937 mt(rd());
+    uniform_int_distribution<int> dist(33, 126);
+    string key = "";
+    for (int i = 0; i < 50; i++) {
+        key.push_back(static_cast<char>(dist(mt)));
+    }
+    return key;
+}
+
+int GenerateBalance(){
+    random_device rd;
+    mt19937 mt(rd());
+    uniform_int_distribution<int> dist(100, 1000000);
+    int balance;
+    balance = dist(mt);
+    return balance;
+}

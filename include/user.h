@@ -10,6 +10,11 @@ class User {
         int mBalance;
     public:
         User();
-        User(string name, string key, int balance);
+        User(string name);
         ~User();
+
+        string getName() {return mName; }
+        string getKey() { return mPublicKey; }
+        int getBalance() { return mBalance; }
+        void setBalance(int newBalance) { mBalance = newBalance;}
 };
