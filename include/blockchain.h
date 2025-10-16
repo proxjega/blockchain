@@ -1,4 +1,5 @@
 #pragma once
+#include "transaction.h"
 #include <array>
 #include <cstdint>
 #include <list>
@@ -13,6 +14,7 @@ using std::list;
 class Transaction;
 
 struct BlockHeader {
+    string hash;
     string prevBlockHash;
     string timestamp;
     string version;
@@ -28,6 +30,7 @@ class Block {
     public:
         //constructors and rule of five
         Block();
+        Block(const string &SatoshiKey);
         Block(const Block &BlockToCopy);
         Block operator=(const Block &BlockToCopy);
         Block(Block &&BlockToMove);

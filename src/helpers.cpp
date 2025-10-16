@@ -14,6 +14,7 @@
 #include <numeric>
 #include <format>
 #include <string>
+#include "../include/transaction.h"
 
 using std::cout;
 using std::ifstream;
@@ -193,9 +194,15 @@ void Negriztamumas(){
     cout << "Hash(\"text\" + salt): \n" << HashFunction("text", true) << "\n";
 }
 
+// ---blockchain helpers---
+
 string GetCurrentTimeStamp(){
     auto now = std::chrono::system_clock::now();
     string time = std::format("{:%Y-%m-%d %H:%M:%S}", now);
     return time;
+}
+
+string MerkleRootHash(vector<Transaction> transactions) {
+    
 }
 
