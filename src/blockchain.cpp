@@ -3,9 +3,13 @@
 #include "../include/user.h"
 #include <random>
 #include <string>
+#include <vector>
 #include <iostream>
+#include <unordered_map>
 
 using std::cout;
+using std::unordered_map;
+using std::vector;
 
 string GetCurrentTimeStamp();
 string HashFunction(const string &input);
@@ -39,6 +43,11 @@ Block::Block(const string &SatoshiKey){
     this->mHeader = header;
 }
 
+Block::Block(const unordered_map<string, Transaction> &memPool) {
+
+}
+
+
 void Block::CoutBlock() {
     cout << "Hash: " << mHeader.hash << "\n"
     << "nonce: " << mHeader.nonce << "\n"
@@ -65,11 +74,13 @@ Block::~Block() {
 // Blockchain methods:
 
 Blockchain::Blockchain(const string &satoshisKey) {
+    // generate users and transactions
+    GenerateUsersAndTransactions();
+
     // add genesis block
     Block genesisBlock(satoshisKey);
+    this->ExecuteTransactions(genesisBlock, users);
     blockList.push_back(genesisBlock);
-    
-    
 }
 
 void Blockchain::GenerateMemPool(const vector<User> &users) {
@@ -83,11 +94,32 @@ void Blockchain::GenerateMemPool(const vector<User> &users) {
         User user1 = users.at(userDistribution(mt));
         User user2 = users.at(userDistribution(mt));
         Transaction transaction(i, user1.getKey(), user2.getKey(), amountDistribution(mt));
-        memPool.push_back(transaction);
+        memPool.insert({transaction.getHash(), transaction});
     }
+}
+
+void Blockchain::GenerateUsersAndTransactions(){
+    users.reserve(1000);
+    for (int i = 0; i < 1000; i++) {
+        string name = "JohnSmith" + std::to_string(i);
+        User user(name);
+        users.insert({user.getKey(), user});
+    }
+    // vector for fast random access (for transactions generation)
+    vector<User> usersVector;
+    usersVector.reserve(1000);
+    for (auto it = users.begin(); it!=users.end(); it++) {
+        usersVector.push_back(it->second);
+    }
+   
+    //generate transactions
+    this->GenerateMemPool(usersVector);
+
+    usersVector.clear(); // not needed anymore
 }
 
 Blockchain::~Blockchain(){
     blockList.clear();
     memPool.clear();
+    users.clear();
 }

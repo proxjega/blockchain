@@ -50,7 +50,7 @@ class Block {
         Block(const string &SatoshiKey);
 
         //block with 100 random transactions
-        Block(const vector<Transaction> &memPool);
+        Block(const unordered_map<string, Transaction> &memPool);
 
         //getters and setters
         BlockHeader getHeader() {return mHeader;}
@@ -65,8 +65,13 @@ class Block {
 class Blockchain {
     private:
         list<Block> blockList;
-        vector<Transaction> memPool;
+        unordered_map<string, User> users;
+        unordered_map<string, Transaction> memPool;
+        
+        // private methods (are called only by blockchain itself)
         void ExecuteTransactions(const Block &block, std::unordered_map<string, User> &users); //TODO
+        void GenerateUsersAndTransactions();
+        void GenerateMemPool(const vector<User> &users);
     public:
         //constructors
         Blockchain(const string &satoshisKey);
@@ -77,8 +82,7 @@ class Blockchain {
         
         // protected getters 
         const list<Block> &getBlockChain() const {return blockList;}
-        const vector<Transaction> &getMemPool() const {return memPool;}
+        const unordered_map<string, Transaction> &getMemPool() const {return memPool;}
 
-        void GenerateMemPool(const vector<User> &users);
         void validateAndAddBlock(Block &BlockToAdd); // TODO
 };

@@ -11,7 +11,7 @@ class Transaction {
         string mReceiver;
         int mAmount;
     public:
-        Transaction();
+        Transaction() = default;
         Transaction(int id, const string& sender, const string& receiver, int amount);
         ~Transaction();
 
