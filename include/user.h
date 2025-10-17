@@ -14,8 +14,8 @@ class User {
         User(const string &name, const string &key, int balance);
         ~User();
 
-        string getName() {return mName; }
-        string getKey() { return mPublicKey; }
-        int getBalance() { return mBalance; }
+        string getName() const {return mName; }
+        string getKey() const { return mPublicKey; }
+        int getBalance() const { return mBalance; }
         void setBalance(int newBalance) { mBalance = newBalance;}
 };

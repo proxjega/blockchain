@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <cassert>
 #include <random>
 #include <string>
 #include <vector>
@@ -36,6 +38,16 @@ void Blockchain::GenerateMemPool(const vector<User> &users) {
         Transaction transaction(i, user1.getKey(), user2.getKey(), amountDistribution(mt));
         memPool.insert({transaction.getHash(), transaction});
     }
+    
+    //create sorted transaction hashes vector (transactions with biggest sent amount will be processed first)
+    for (auto transaction : memPool) {
+        sortedTransactionHashes.push_back(transaction.first);
+    }
+
+    std::sort(sortedTransactionHashes.begin(), sortedTransactionHashes.end(), [this](const string& firstHash, const string& secondHash) -> bool{
+        return memPool.at(firstHash).getAmount() < memPool.at(secondHash).getAmount();
+    });
+    assert( memPool.size() == sortedTransactionHashes.size());
 }
 
 void Blockchain::GenerateUsersAndTransactions(){

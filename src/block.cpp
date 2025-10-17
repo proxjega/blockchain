@@ -18,11 +18,11 @@ Block::Block(const string &SatoshiKey){
     header.prevBlockHash = nullHash;
     Transaction firstTransaction(0, "Block Reward", SatoshiKey, 50);
     this->mData.push_back(firstTransaction);
-    header.timestamp = GetCurrentTimeStamp();
+    header.timestamp = "2009-01-09 04:54:25";
     header.version = "1";
     header.merkleRootHash = MerkleRootHash(mData);
     header.difficultyTarget = 1;
-    long int nonce = 8400199;
+    long int nonce = 1200097;
     while (true) {
         cout << nonce << "\n";
         string hash = HashFunction(header.ToString() + std::to_string(nonce));

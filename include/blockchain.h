@@ -39,6 +39,7 @@ class Blockchain {
         // protected getters 
         const list<Block> &getBlockChain() const {return blockList;}
         const unordered_map<string, Transaction> &getMemPool() const {return memPool;}
+        const vector<string> &getSortedHashVector() const {return sortedTransactionHashes;}
 
         void validateAndAddBlock(Block &BlockToAdd); // TODO
 };
