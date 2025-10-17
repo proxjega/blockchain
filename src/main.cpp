@@ -15,10 +15,10 @@ int main() {
 
     //create blockchain
     Blockchain Btc(Satoshi.getKey());
+    
     Btc.getLastBlock().CoutBlock();
 
     
-
 
     // for (auto transaction : Btc.getMemPool()) {
     //     cout << "TX: " << transaction.getID() <<" from:" << transaction.getSender() << 
