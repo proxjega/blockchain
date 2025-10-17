@@ -1,5 +1,4 @@
 #include <iostream>
-#include <random>
 #include <sstream>
 #include <vector>
 #include <string>
@@ -203,15 +202,21 @@ string GetCurrentTimeStamp(){
 }
 
 string MerkleRootHash(const vector<Transaction> &transactions) {
+    // return empty if no transactions
+    if (transactions.size() == 0) return "";
+
+    //put transaction hashes into vector
     vector<string> hashes;
-    for (auto transaction : transactions) {
+    hashes.reserve(transactions.size());
+    for (const auto &transaction : transactions) {
         hashes.push_back(transaction.getHash());
     }
     
-    while (hashes.size() != 1) {
-        if (hashes.size() % 2 != 0) hashes.push_back(hashes.front());
+    while (hashes.size() > 1) {
+        if (hashes.size() % 2 != 0) hashes.push_back(hashes.back());
         vector<string> newHashes;
-        for (int i = 0; i < hashes.size() - 1; i+=2) {
+        newHashes.reserve((hashes.size()+1)/2);
+        for (size_t i = 0; i < hashes.size() - 1; i+=2) {
             string newHash = HashFunction(hashes.at(i) + hashes.at(i+1));
             newHashes.push_back(newHash);
         }
