@@ -47,6 +47,7 @@ string HashFunction(const string &input){
         hash[i]+= randomDistribution(engine);
         hash[i]=hash[i]%16;
     }
+    hash[0] = 0;
     // convert to string
     ostringstream oss;
     for (int i = 0; i < HASH_LENGTH; i++) {

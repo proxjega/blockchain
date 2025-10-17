@@ -6,6 +6,7 @@
 using std::cout;
 
 string GetCurrentTimeStamp();
+string HashFunctionAI(const string &input);
 string HashFunction(const string &input);
 string MerkleRootHash(const vector<Transaction> &transactions);
 
@@ -18,14 +19,14 @@ Block::Block(const string &SatoshiKey){
     mHeader.prevBlockHash = nullHash;
     Transaction firstTransaction(0, "Block Reward", SatoshiKey, 50);
     this->mData.push_back(firstTransaction);
-    mHeader.timestamp = "2009-01-09 04:54:25.0000000";
+    mHeader.timestamp = "2009-01-09 04:54:25";
     mHeader.version = "1";
     mHeader.merkleRootHash = MerkleRootHash(mData);
     mHeader.difficultyTarget = 1;
-    long long int nonce = 92685137;
+    long long int nonce = 4008;
     while (true) {
-        string hash = HashFunction(mHeader.ToString() + std::to_string(nonce));
-        cout << nonce << "\n";
+        string arg = mHeader.ToString() + std::to_string(nonce);
+        string hash = HashFunction(arg);
         if (hash[0] == '0' && hash[1] == '0' && hash[2] == '0') {
             mHeader.hash = hash;
             mHeader.nonce = nonce;
@@ -33,6 +34,7 @@ Block::Block(const string &SatoshiKey){
         }
         nonce++;
     }
+    cout << nonce << "\n";
 }
 
 Block::Block(const Blockchain &blockchain){
