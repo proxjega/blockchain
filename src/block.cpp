@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "../include/block.h"
+#include "../include/blockchain.h"
 
 using std::cout;
 
@@ -10,40 +11,44 @@ string MerkleRootHash(const vector<Transaction> &transactions);
 
 //Genesis block 
 Block::Block(const string &SatoshiKey){
-    BlockHeader header;
     string nullHash = "";
     for (int i = 0 ; i < 64; i++) {
         nullHash.push_back('0');
     }
-    header.prevBlockHash = nullHash;
+    mHeader.prevBlockHash = nullHash;
     Transaction firstTransaction(0, "Block Reward", SatoshiKey, 50);
     this->mData.push_back(firstTransaction);
-    header.timestamp = "2009-01-09 04:54:25";
-    header.version = "1";
-    header.merkleRootHash = MerkleRootHash(mData);
-    header.difficultyTarget = 1;
-    long int nonce = 1200097;
+    mHeader.timestamp = "2009-01-09 04:54:25.0000000";
+    mHeader.version = "1";
+    mHeader.merkleRootHash = MerkleRootHash(mData);
+    mHeader.difficultyTarget = 1;
+    long long int nonce = 92685137;
     while (true) {
+        string hash = HashFunction(mHeader.ToString() + std::to_string(nonce));
         cout << nonce << "\n";
-        string hash = HashFunction(header.ToString() + std::to_string(nonce));
         if (hash[0] == '0' && hash[1] == '0' && hash[2] == '0') {
-            header.hash = hash;
-            header.nonce = nonce;
+            mHeader.hash = hash;
+            mHeader.nonce = nonce;
             break;
         }
         nonce++;
     }
-    this->mHeader = header;
 }
 
-// Block::Block(const unordered_map<string, Transaction> &memPool) {
-//     for (int i = 0; i < 100; i++) {
-//         memPool.b
-//     }
-// }
+Block::Block(const Blockchain &blockchain){
+    mHeader.prevBlockHash = blockchain.getLastBlock().getHash();
+    mHeader.version = "1";
+    mHeader.difficultyTarget = 1;
+    // push 100 tx
+    for (auto it = blockchain.getSortedHashVector().end()-100; it!=blockchain.getSortedHashVector().end(); it++) {
+        mData.push_back(blockchain.getMemPool().at(*it));
+    }
+
+    mHeader.merkleRootHash = MerkleRootHash(mData);
+}
 
 
-void Block::CoutBlock() {
+void Block::CoutBlock() const {
     cout << "Hash: " << mHeader.hash << "\n"
     << "nonce: " << mHeader.nonce << "\n"
     << "Previous block Hash: " << mHeader.prevBlockHash << "\n"

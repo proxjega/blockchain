@@ -17,11 +17,8 @@ int main() {
     Blockchain Btc(Satoshi.getKey());
     
     Btc.getLastBlock().CoutBlock();
-    const auto mempool = Btc.getMemPool();
-    for (auto hash : Btc.getSortedHashVector()) {
-        cout << mempool.at(hash).getAmount() << "\n";
-    }
-    cout << Btc.getSortedHashVector().size() << " " << Btc.getMemPool().size();
+    Block newblock(Btc);
+    newblock.CoutBlock();    
     // for (auto transaction : Btc.getMemPool()) {
     //     cout << "TX: " << transaction.getID() <<" from:" << transaction.getSender() << 
     //     " to:" << transaction.getReceiver() << " " << transaction.getAmount() << "\n hash: " << transaction.getHash() << "\n";

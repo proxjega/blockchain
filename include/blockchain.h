@@ -34,12 +34,13 @@ class Blockchain {
         ~Blockchain();
 
         //getters and setters
-        Block getLastBlock() { return blockList.back();}
+        const Block &getLastBlock() const { return blockList.back();}
         
         // protected getters 
         const list<Block> &getBlockChain() const {return blockList;}
         const unordered_map<string, Transaction> &getMemPool() const {return memPool;}
         const vector<string> &getSortedHashVector() const {return sortedTransactionHashes;}
+        const unordered_map<string, User> &getUsers() const {return users;}
 
         void validateAndAddBlock(Block &BlockToAdd); // TODO
 };

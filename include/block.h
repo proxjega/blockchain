@@ -10,21 +10,22 @@ using std::string;
 using std::unordered_map;
 
 class Transaction;
+class Blockchain;
 
 struct BlockHeader {
     // calculated by mining
     string hash;
+    string timestamp;
     long long int nonce;
 
     // calculated after block creation
     string prevBlockHash;
-    string timestamp;
     string version;
     string merkleRootHash;
     int difficultyTarget;  
 
     string ToString() {
-        return prevBlockHash + timestamp + version + merkleRootHash + std::to_string(difficultyTarget);
+        return prevBlockHash + version + merkleRootHash + std::to_string(difficultyTarget);
     }
 };
 
@@ -44,15 +45,16 @@ class Block {
         //genesis block
         Block(const string &SatoshiKey);
 
-        //block with 100 random transactions
-        Block(const unordered_map<string, Transaction> &memPool);
+        //new block with 100 random transactions
+        Block(const Blockchain &blockchain);
 
         //getters and setters
-        BlockHeader getHeader() {return mHeader;}
-        vector<Transaction> getTransactions() ;
+        BlockHeader getHeader() const {return mHeader;}
+        string getHash() const {return mHeader.hash;}
+        const vector<Transaction> &getTransactions() const  {return mData;}
         void setHeader(BlockHeader header);
         void setTransactions(vector<Transaction> transactions);
         
-        void CoutBlock();
+        void CoutBlock() const;
         bool Mine(long long int number);
 };
