@@ -26,8 +26,8 @@ class Blockchain {
         
         // private methods (are called only by blockchain itself)
         void ExecuteTransactions(const Block &block, std::unordered_map<string, User> &users); //TODO
-        void GenerateUsersAndTransactions();
-        void GenerateMemPool(const vector<User> &users);
+        void GenerateUsers();
+        void GenerateMemPool();
     public:
         //constructors
         Blockchain(const string &satoshisKey);

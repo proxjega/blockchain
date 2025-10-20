@@ -17,7 +17,8 @@ using std::vector;
 
 Blockchain::Blockchain(const string &satoshisKey) {
     // generate users and transactions
-    GenerateUsersAndTransactions();
+    GenerateUsers();
+    GenerateMemPool();
 
     // add genesis block
     Block genesisBlock(satoshisKey);
@@ -25,16 +26,24 @@ Blockchain::Blockchain(const string &satoshisKey) {
     blockList.push_back(genesisBlock);
 }
 
-void Blockchain::GenerateMemPool(const vector<User> &users) {
+void Blockchain::GenerateMemPool() {
+    
+    // vector for fast random access
+    vector<User> usersVector;
+    usersVector.reserve(1000);
+    for (auto it = users.begin(); it!=users.end(); it++) {
+        usersVector.push_back(it->second);
+    }
+    
     //generate mempool
     std::random_device rd;
     std::mt19937 mt(rd());
-    std::uniform_int_distribution<int> userDistribution(0, users.size() - 1);
+    std::uniform_int_distribution<int> userDistribution(0, usersVector.size() - 1);
     std::uniform_int_distribution<int> amountDistribution(0, 100);
     memPool.reserve(10000);
     for (int i = 1; i < 10000; i++) {
-        User user1 = users.at(userDistribution(mt));
-        User user2 = users.at(userDistribution(mt));
+        User user1 = usersVector.at(userDistribution(mt));
+        User user2 = usersVector.at(userDistribution(mt));
         Transaction transaction(i, user1.getKey(), user2.getKey(), amountDistribution(mt));
         memPool.insert({transaction.getHash(), transaction});
     }
@@ -50,24 +59,13 @@ void Blockchain::GenerateMemPool(const vector<User> &users) {
     assert( memPool.size() == sortedTransactionHashes.size());
 }
 
-void Blockchain::GenerateUsersAndTransactions(){
+void Blockchain::GenerateUsers(){
     users.reserve(1000);
     for (int i = 0; i < 1000; i++) {
         string name = "JohnSmith" + std::to_string(i);
         User user(name);
         users.insert({user.getKey(), user});
     }
-    // vector for fast random access (for transactions generation)
-    vector<User> usersVector;
-    usersVector.reserve(1000);
-    for (auto it = users.begin(); it!=users.end(); it++) {
-        usersVector.push_back(it->second);
-    }
-   
-    //generate transactions
-    this->GenerateMemPool(usersVector);
-
-    usersVector.clear(); // not needed anymore
 }
 
 Blockchain::~Blockchain(){

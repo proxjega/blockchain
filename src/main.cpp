@@ -11,7 +11,7 @@
 string GetCurrentTimeStamp();
 int main() {
     // create user satoshi (for genesis block)
-    User Satoshi("Satoshi Nakamoto", "12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX", 50);
+    User Satoshi("Satoshi Nakamoto", "12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX", 0);
 
     //create blockchain
     Blockchain Btc(Satoshi.getKey());
@@ -20,8 +20,8 @@ int main() {
     Block newblock(Btc);
     newblock.CoutBlock();    
     // for (auto transaction : Btc.getMemPool()) {
-    //     cout << "TX: " << transaction.getID() <<" from:" << transaction.getSender() << 
-    //     " to:" << transaction.getReceiver() << " " << transaction.getAmount() << "\n hash: " << transaction.getHash() << "\n";
+    //     cout << "TX: " << transaction.second.getID() <<" from:" << transaction.second.getSender() << 
+    //     " to:" << transaction.second.getReceiver() << " " << transaction.second.getAmount() << "\n hash: " << transaction.second.getHash() << "\n";
     // }
 
 
