@@ -11,6 +11,7 @@ using std::unordered_map;
 
 class Transaction;
 class Blockchain;
+class User;
 
 struct BlockHeader {
     // calculated by mining
@@ -43,7 +44,7 @@ class Block {
         ~Block();
 
         //genesis block
-        Block(const string &SatoshiKey);
+        Block(const User &satoshi);
 
         //new block with 100 random transactions
         Block(const Blockchain &blockchain);

@@ -11,10 +11,9 @@
 string GetCurrentTimeStamp();
 int main() {
     // create user satoshi (for genesis block)
-    User Satoshi("Satoshi Nakamoto", "12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX", 0);
 
     //create blockchain
-    Blockchain Btc(Satoshi.getKey());
+    Blockchain Btc;
     
     Btc.getLastBlock().CoutBlock();
     Block newblock(Btc);

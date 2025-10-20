@@ -30,7 +30,7 @@ class Blockchain {
         void GenerateMemPool();
     public:
         //constructors
-        Blockchain(const string &satoshisKey);
+        Blockchain();
         ~Blockchain();
 
         //getters and setters

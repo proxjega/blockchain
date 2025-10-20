@@ -15,13 +15,17 @@ using std::unordered_map;
 using std::vector;
 
 
-Blockchain::Blockchain(const string &satoshisKey) {
+Blockchain::Blockchain() {
     // generate users and transactions
     GenerateUsers();
     GenerateMemPool();
 
+    //satoshi
+    User Satoshi("Satoshi Nakamoto", "12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX", 0);
+    this->users.insert({Satoshi.getKey(), Satoshi});
+
     // add genesis block
-    Block genesisBlock(satoshisKey);
+    Block genesisBlock(Satoshi);
     // this->ExecuteTransactions(genesisBlock, users);
     blockList.push_back(genesisBlock);
 }

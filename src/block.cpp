@@ -2,6 +2,7 @@
 
 #include "../include/block.h"
 #include "../include/blockchain.h"
+#include "../include/user.h"
 
 using std::cout;
 
@@ -11,13 +12,13 @@ string HashFunction(const string &input);
 string MerkleRootHash(const vector<Transaction> &transactions);
 
 //Genesis block 
-Block::Block(const string &SatoshiKey){
+Block::Block(const User &Satoshi){
     string nullHash = "";
     for (int i = 0 ; i < 64; i++) {
         nullHash.push_back('0');
     }
     mHeader.prevBlockHash = nullHash;
-    Transaction firstTransaction(0, "Block Reward", SatoshiKey, 50);
+    Transaction firstTransaction(0, "Block Reward", Satoshi.getKey(), 50);
     this->mData.push_back(firstTransaction);
     mHeader.timestamp = "2009-01-09 04:54:25";
     mHeader.version = "1";
@@ -34,7 +35,6 @@ Block::Block(const string &SatoshiKey){
         }
         nonce++;
     }
-    cout << nonce << "\n";
 }
 
 Block::Block(const Blockchain &blockchain){
