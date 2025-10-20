@@ -14,11 +14,14 @@ using std::cout;
 using std::unordered_map;
 using std::vector;
 
+string HashFunction(const string &input);
+
 
 Blockchain::Blockchain() {
     // generate users and transactions
     GenerateUsers();
     GenerateMemPool();
+    VerifyMemPool();
 
     //satoshi
     User Satoshi("Satoshi Nakamoto", "12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX", 0);
@@ -69,6 +72,30 @@ void Blockchain::GenerateUsers(){
         string name = "JohnSmith" + std::to_string(i);
         User user(name);
         users.insert({user.getKey(), user});
+    }
+}
+
+void Blockchain::validateAndAddBlock(Block &BlockToAdd){
+    bool add = true;
+    // validate transactions
+    for (auto Transaction : BlockToAdd.getTransactions()) {
+        if(Transaction.getAmount() > users.at(Transaction.getSender()).getBalance()) {
+            memPool.erase(Transaction.getHash());
+            continue;
+            add = false;
+        }
+        if (Transaction.getHash()!= 
+        HashFunction(std::to_string(Transaction.getID()) + Transaction.getSender() + Transaction.getReceiver() + std::to_string(Transaction.getAmount()) )) {
+            memPool.erase(Transaction.getHash());
+            continue;
+            add = false;
+        }
+    }
+    
+
+    if (add == false) {
+        cout << "Block denied\n";
+        return;
     }
 }
 

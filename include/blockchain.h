@@ -28,6 +28,7 @@ class Blockchain {
         void ExecuteTransactions(const Block &block, std::unordered_map<string, User> &users); //TODO
         void GenerateUsers();
         void GenerateMemPool();
+        void VerifyMemPool();
     public:
         //constructors
         Blockchain();

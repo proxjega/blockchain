@@ -3,10 +3,6 @@
 #include "../include/transaction.h"
 #include "../include/blockchain.h"
 #include <cassert>
-#include <random>
-#include <string>
-#include <unordered_map>
-#include <vector>
 
 string GetCurrentTimeStamp();
 int main() {
