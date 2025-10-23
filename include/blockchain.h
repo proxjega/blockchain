@@ -28,7 +28,6 @@ class Blockchain {
         void ExecuteTransactions(const Block &block, std::unordered_map<string, User> &users); //TODO
         void GenerateUsers();
         void GenerateMemPool();
-        void VerifyMemPool();
     public:
         //constructors
         Blockchain();
@@ -42,6 +41,8 @@ class Blockchain {
         const unordered_map<string, Transaction> &getMemPool() const {return memPool;}
         const vector<string> &getSortedHashVector() const {return sortedTransactionHashes;}
         const unordered_map<string, User> &getUsers() const {return users;}
+
+        bool addTransactionToMempool(const Transaction &transactionToAdd);
 
         void validateAndAddBlock(Block &BlockToAdd); // TODO
 };

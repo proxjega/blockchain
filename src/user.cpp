@@ -1,9 +1,12 @@
 #include "../include/user.h"
 
+// public key generator
 string GenerateKey();
+
+//generates random balance from 100 to 1000000
 int GenerateBalance();
 
-
+// user with given name and random balance
 User::User(const string &name) {
     mName = name;
     mPublicKey = GenerateKey();

@@ -21,7 +21,6 @@ Blockchain::Blockchain() {
     // generate users and transactions
     GenerateUsers();
     GenerateMemPool();
-    VerifyMemPool();
 
     //satoshi
     User Satoshi("Satoshi Nakamoto", "12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX", 0);
@@ -99,8 +98,50 @@ void Blockchain::validateAndAddBlock(Block &BlockToAdd){
     }
 }
 
+// Add transaction with verifying
+bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
+
+    // check if users exists
+    if (users.find(transactionToAdd.getSender()) == users.end() ||
+        users.find(transactionToAdd.getReceiver()) == users.end()) {
+        return false;
+    }
+
+    if (transactionToAdd.getAmount() <=0) {
+        return false;
+    }
+
+    // check if user has enough to send
+    if(transactionToAdd.getAmount() > users.at(transactionToAdd.getSender()).getBalance()) {
+        return false;
+    }
+    
+    // check hash
+    if (transactionToAdd.getHash()!= 
+        HashFunction(std::to_string(transactionToAdd.getID()) + transactionToAdd.getSender() + transactionToAdd.getReceiver() + std::to_string(transactionToAdd.getAmount()) )) {
+        return false;
+    }
+
+    //insert
+    memPool.insert({transactionToAdd.getHash(), transactionToAdd});
+
+    // insert into sorted vector
+    auto amountToInsert = transactionToAdd.getAmount();
+    auto pos = std::lower_bound(
+        sortedTransactionHashes.begin(), 
+        sortedTransactionHashes.end(), 
+        amountToInsert, 
+        [this](const string& existingHash, int amount) -> bool{
+        return memPool.at(existingHash).getAmount() < amount;
+    });
+    sortedTransactionHashes.insert(pos, transactionToAdd.getHash());
+
+    return true;
+}
+
 Blockchain::~Blockchain(){
     blockList.clear();
     memPool.clear();
     users.clear();
+    sortedTransactionHashes.clear();
 }

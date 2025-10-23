@@ -10,6 +10,9 @@ int main() {
 
     //create blockchain
     Blockchain Btc;
+    Transaction tx(3,"a","2",1000);
+    bool check = Btc.addTransactionToMempool(tx);
+    if (!check) cout << "Could not add tx\n";
     
     Btc.getLastBlock().CoutBlock();
     Block newblock(Btc);
