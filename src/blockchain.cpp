@@ -15,6 +15,7 @@ using std::unordered_map;
 using std::vector;
 
 string HashFunction(const string &input);
+string MerkleRootHash(const vector<Transaction> &transactions);
 
 
 Blockchain::Blockchain() {
@@ -75,28 +76,41 @@ void Blockchain::GenerateUsers(){
 }
 
 void Blockchain::validateAndAddBlock(Block &BlockToAdd){
-    bool add = true;
 
     // check if transactions are in mempool
     for (auto tx : BlockToAdd.getTransactions()) {
-        if (memPool.find(tx.getHash()) == memPool.end()) return;
+        if (memPool.find(tx.getHash()) == memPool.end()) {
+            return;
+        }
     }
+
+    //check merkle root
+    if(BlockToAdd.getHeader().merkleRootHash != MerkleRootHash(BlockToAdd.getTransactions())) {
+        return;
+    } 
 
     // check if the block has correct previous block hash
-    if (BlockToAdd.getHeader().prevBlockHash != this->getLastBlock().getHash()) return;
-    
-    //check block hash
-    if (BlockToAdd.getHash().empty()) return;
-
-    // check if hash is correct (according to proof of work)
-    if (BlockToAdd.getHash()[0] != '0' || BlockToAdd.getHash()[1] != '0' || BlockToAdd.getHash()[2] != '0') return;
-
-    if (BlockToAdd.getHash() != HashFunction(""));
-
-    if (add == false) {
-        cout << "Block denied\n";
+    if (BlockToAdd.getHeader().prevBlockHash != this->getLastBlock().getHash()) {
         return;
     }
+    //check block hash
+    if (BlockToAdd.getHash().empty()) {
+        return;
+    }
+    // check if hash is correct (according to proof of work)
+    if (BlockToAdd.getHash()[0] != '0' || BlockToAdd.getHash()[1] != '0' || BlockToAdd.getHash()[2] != '0') {
+        return;
+    }
+
+    //check if hash is correct
+    if (BlockToAdd.getHash() != HashFunction(BlockToAdd.getHeader().ToString() + std::to_string(BlockToAdd.getHeader().nonce))) {
+        return;
+    };
+
+    this->ExecuteTransactions(BlockToAdd.getTransactions());
+    blockList.push_back(BlockToAdd);
+
+    
 }
 
 // Add transaction with verifying
