@@ -72,7 +72,7 @@ bool Block::Mine(){
         }
         mHeader.nonce++;
     }
-    cout << "Mining completed with nonce:" << mHeader.nonce <<"\nHash: " << mHeader.hash << "\n";
+    cout << "Mining completed with nonce:" << mHeader.nonce <<"\nHash: " << mHeader.hash << "\n\n";
     return true;
 }
 

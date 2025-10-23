@@ -25,7 +25,11 @@ int main() {
     cout << "Sizes after adding:" << Btc.getMemPool().size() << " " << Btc.getSortedHashVector().size() << "\n";
 
     while (true){
-        Block blockToMine(Btc)
+        Block blockToMine(Btc);
+        blockToMine.Mine();
+        Btc.validateAndAddBlock(blockToMine);
+        Btc.getLastBlock().CoutBlock();
+        if(Btc.getMemPool().size()==0) break;
     }
 
     // for (auto transaction : Btc.getMemPool()) {
