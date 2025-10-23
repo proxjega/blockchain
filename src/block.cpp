@@ -42,10 +42,18 @@ Block::Block(const Blockchain &blockchain){
     mHeader.prevBlockHash = blockchain.getLastBlock().getHash();
     mHeader.version = "1";
     mHeader.difficultyTarget = 3;
-    
+
     // push 100 tx
-    for (auto it = blockchain.getSortedHashVector().end()-100; it!=blockchain.getSortedHashVector().end(); it++) {
-        mData.push_back(blockchain.getMemPool().at(*it));
+    if (blockchain.getSortedHashVector().size() > 100){
+        for (auto it = blockchain.getSortedHashVector().end()-100; it!=blockchain.getSortedHashVector().end(); it++) {
+            mData.push_back(blockchain.getMemPool().at(*it));
+        }
+    }
+    //or push all remaining tx
+    else {
+        for (auto tx : blockchain.getSortedHashVector()) {
+            mData.push_back(blockchain.getMemPool().at(tx));
+        }
     }
 
     mHeader.merkleRootHash = MerkleRootHash(mData);

@@ -11,7 +11,6 @@
 #include "../include/user.h"
 
 using std::cout;
-using std::unordered_map;
 using std::vector;
 
 string HashFunction(const string &input);
@@ -93,6 +92,7 @@ void Blockchain::validateAndAddBlock(Block &BlockToAdd){
     if (BlockToAdd.getHeader().prevBlockHash != this->getLastBlock().getHash()) {
         return;
     }
+
     //check block hash
     if (BlockToAdd.getHash().empty()) {
         return;
@@ -101,7 +101,6 @@ void Blockchain::validateAndAddBlock(Block &BlockToAdd){
     if (BlockToAdd.getHash()[0] != '0' || BlockToAdd.getHash()[1] != '0' || BlockToAdd.getHash()[2] != '0') {
         return;
     }
-
     //check if hash is correct
     if (BlockToAdd.getHash() != HashFunction(BlockToAdd.getHeader().ToString() + std::to_string(BlockToAdd.getHeader().nonce))) {
         return;

@@ -24,6 +24,10 @@ int main() {
     Btc.validateAndAddBlock(newblock);
     cout << "Sizes after adding:" << Btc.getMemPool().size() << " " << Btc.getSortedHashVector().size() << "\n";
 
+    while (true){
+        Block blockToMine(Btc)
+    }
+
     // for (auto transaction : Btc.getMemPool()) {
     //     cout << "TX: " << transaction.second.getID() <<" from:" << transaction.second.getSender() << 
     //     " to:" << transaction.second.getReceiver() << " " << transaction.second.getAmount() << "\n hash: " << transaction.second.getHash() << "\n";
