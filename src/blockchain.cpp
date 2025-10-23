@@ -48,7 +48,7 @@ void Blockchain::GenerateMemPool() {
     std::uniform_int_distribution<int> userDistribution(0, usersVector.size() - 1);
     std::uniform_int_distribution<int> amountDistribution(0, 100);
     memPool.reserve(10000);
-    for (int i = 1; i < 10000; i++) {
+    for (int i = 1; i <= 10000; i++) {
         User user1 = usersVector.at(userDistribution(mt));
         User user2 = usersVector.at(userDistribution(mt));
         Transaction transaction(i, user1.getKey(), user2.getKey(), amountDistribution(mt));
@@ -109,9 +109,29 @@ void Blockchain::validateAndAddBlock(Block &BlockToAdd){
 
     this->ExecuteTransactions(BlockToAdd.getTransactions());
     blockList.push_back(BlockToAdd);
-
+    cout << "Block added!\n";
     
 }
+
+void Blockchain::ExecuteTransactions(const vector<Transaction> &transactions){
+    // update balances
+    for(auto tx : transactions) {
+        auto balance = users.at(tx.getReceiver()).getBalance();
+        users.at(tx.getReceiver()).setBalance(balance + tx.getAmount());
+    
+        memPool.erase(tx.getHash());
+        
+    }
+
+    //clear completed transactions from sortedTransactionHashes
+    if (sortedTransactionHashes.size() > 100) 
+        sortedTransactionHashes.erase(sortedTransactionHashes.end() - 100, sortedTransactionHashes.end());
+    else    
+        sortedTransactionHashes.clear();
+
+
+}
+
 
 // Add transaction with verifying
 bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){

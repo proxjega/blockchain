@@ -25,7 +25,7 @@ class Blockchain {
         vector<string> sortedTransactionHashes;
         
         // private methods (are called only by blockchain itself)
-        void ExecuteTransactions(const vector<Transaction> transactions); //TODO
+        void ExecuteTransactions(const vector<Transaction> &transactions); //TODO
         void GenerateUsers();
         void GenerateMemPool();
     public:

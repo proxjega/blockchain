@@ -16,9 +16,14 @@ int main() {
 
     Btc.getLastBlock().CoutBlock();
     Block newblock(Btc);
-    newblock.CoutBlock();    
+    newblock.CoutBlock();
+    Btc.validateAndAddBlock(newblock);    
     newblock.Mine();
     newblock.CoutBlock();
+    cout << "Sizes before adding:" << Btc.getMemPool().size() << " " << Btc.getSortedHashVector().size() << "\n";
+    Btc.validateAndAddBlock(newblock);
+    cout << "Sizes after adding:" << Btc.getMemPool().size() << " " << Btc.getSortedHashVector().size() << "\n";
+
     // for (auto transaction : Btc.getMemPool()) {
     //     cout << "TX: " << transaction.second.getID() <<" from:" << transaction.second.getSender() << 
     //     " to:" << transaction.second.getReceiver() << " " << transaction.second.getAmount() << "\n hash: " << transaction.second.getHash() << "\n";

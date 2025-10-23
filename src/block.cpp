@@ -42,6 +42,7 @@ Block::Block(const Blockchain &blockchain){
     mHeader.prevBlockHash = blockchain.getLastBlock().getHash();
     mHeader.version = "1";
     mHeader.difficultyTarget = 3;
+    
     // push 100 tx
     for (auto it = blockchain.getSortedHashVector().end()-100; it!=blockchain.getSortedHashVector().end(); it++) {
         mData.push_back(blockchain.getMemPool().at(*it));
