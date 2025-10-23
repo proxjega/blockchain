@@ -23,8 +23,8 @@ Block::Block(const User &Satoshi){
     mHeader.timestamp = "2009-01-09 04:54:25";
     mHeader.version = "1";
     mHeader.merkleRootHash = MerkleRootHash(mData);
-    mHeader.difficultyTarget = 1;
-    long long int nonce = 4008;
+    mHeader.difficultyTarget = 3;
+    long long int nonce = 6008;
     while (true) {
         string arg = mHeader.ToString() + std::to_string(nonce);
         string hash = HashFunction(arg);
@@ -38,15 +38,33 @@ Block::Block(const User &Satoshi){
 }
 
 Block::Block(const Blockchain &blockchain){
+    mHeader.hash.clear();
     mHeader.prevBlockHash = blockchain.getLastBlock().getHash();
     mHeader.version = "1";
-    mHeader.difficultyTarget = 1;
+    mHeader.difficultyTarget = 3;
     // push 100 tx
     for (auto it = blockchain.getSortedHashVector().end()-100; it!=blockchain.getSortedHashVector().end(); it++) {
         mData.push_back(blockchain.getMemPool().at(*it));
     }
 
     mHeader.merkleRootHash = MerkleRootHash(mData);
+}
+
+bool Block::Mine(){
+    if(!mHeader.hash.empty()) return true;
+    mHeader.nonce = 0;
+    while (true) {
+        string arg = mHeader.ToString() + std::to_string(mHeader.nonce);
+        string hash = HashFunction(arg);
+        if (hash[0] == '0' && hash[1] == '0' && hash[2] == '0') {
+            mHeader.hash = hash;
+            mHeader.timestamp = GetCurrentTimeStamp();
+            break;
+        }
+        mHeader.nonce++;
+    }
+    cout << "Mining completed with nonce:" << mHeader.nonce <<"\nHash: " << mHeader.hash << "\n";
+    return true;
 }
 
 

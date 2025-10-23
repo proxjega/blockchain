@@ -13,10 +13,12 @@ int main() {
     Transaction tx(3,"a","2",1000);
     bool check = Btc.addTransactionToMempool(tx);
     if (!check) cout << "Could not add tx\n";
-    
+
     Btc.getLastBlock().CoutBlock();
     Block newblock(Btc);
     newblock.CoutBlock();    
+    newblock.Mine();
+    newblock.CoutBlock();
     // for (auto transaction : Btc.getMemPool()) {
     //     cout << "TX: " << transaction.second.getID() <<" from:" << transaction.second.getSender() << 
     //     " to:" << transaction.second.getReceiver() << " " << transaction.second.getAmount() << "\n hash: " << transaction.second.getHash() << "\n";

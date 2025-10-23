@@ -57,5 +57,5 @@ class Block {
         void setTransactions(vector<Transaction> transactions);
         
         void CoutBlock() const;
-        bool Mine(long long int number);
+        bool Mine();
 };
