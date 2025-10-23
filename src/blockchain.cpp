@@ -76,21 +76,22 @@ void Blockchain::GenerateUsers(){
 
 void Blockchain::validateAndAddBlock(Block &BlockToAdd){
     bool add = true;
-    // validate transactions
-    for (auto Transaction : BlockToAdd.getTransactions()) {
-        if(Transaction.getAmount() > users.at(Transaction.getSender()).getBalance()) {
-            memPool.erase(Transaction.getHash());
-            continue;
-            add = false;
-        }
-        if (Transaction.getHash()!= 
-        HashFunction(std::to_string(Transaction.getID()) + Transaction.getSender() + Transaction.getReceiver() + std::to_string(Transaction.getAmount()) )) {
-            memPool.erase(Transaction.getHash());
-            continue;
-            add = false;
-        }
+
+    // check if transactions are in mempool
+    for (auto tx : BlockToAdd.getTransactions()) {
+        if (memPool.find(tx.getHash()) == memPool.end()) return;
     }
+
+    // check if the block has correct previous block hash
+    if (BlockToAdd.getHeader().prevBlockHash != this->getLastBlock().getHash()) return;
     
+    //check block hash
+    if (BlockToAdd.getHash().empty()) return;
+
+    // check if hash is correct (according to proof of work)
+    if (BlockToAdd.getHash()[0] != '0' || BlockToAdd.getHash()[1] != '0' || BlockToAdd.getHash()[2] != '0') return;
+
+    if (BlockToAdd.getHash() != HashFunction(""));
 
     if (add == false) {
         cout << "Block denied\n";
