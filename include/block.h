@@ -8,6 +8,7 @@
 using std::vector;
 using std::string;
 using std::unordered_map;
+using std::to_string;
 
 class Transaction;
 class Blockchain;
@@ -20,13 +21,14 @@ struct BlockHeader {
     long long int nonce;
 
     // calculated after block creation
+    long int height;
     string prevBlockHash;
     string version;
     string merkleRootHash;
     int difficultyTarget;  
 
     string ToString() {
-        return prevBlockHash + version + merkleRootHash + std::to_string(difficultyTarget);
+        return to_string(height) + prevBlockHash + version + merkleRootHash + to_string(difficultyTarget);
     }
 };
 
@@ -52,6 +54,7 @@ class Block {
         //getters and setters
         BlockHeader getHeader() const {return mHeader;}
         string getHash() const {return mHeader.hash;}
+        long int getHeight() const {return mHeader.height;}
         const vector<Transaction> &getTransactions() const  {return mData;}
         void setHeader(BlockHeader header);
         void setTransactions(vector<Transaction> transactions);
