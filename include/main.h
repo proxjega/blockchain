@@ -46,3 +46,8 @@ void AvalancheTestSHA256(string fileName);
 void CollisionTestAI(string fileName);
 void CheckKonstitucijaAI();
 void AvalancheTestAI(string fileName);
+
+void Case1();
+void Case2();
+void Case3();
+void Case4();

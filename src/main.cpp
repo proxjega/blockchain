@@ -5,15 +5,36 @@
 #include "../include/logger.h"
 #include <cassert>
 
+using std::cin;
+
 string GetCurrentTimeStamp();
 int main() {
 
-    //create blockchain
+    //initialization
     Blockchain Btc;
-    Transaction tx(3,"a","2",1000);
-    Btc.addTransactionToMempool(tx);
-
     getLogger().Log(Btc.getLastBlock());
+
+    while (true) {
+        cout << "Choose what to do:\n1 - mine 1 block\n2 - mine 5 block for 5 secs\n3 - validation check\n4 - get block info\n";
+        char choose;
+        cin >> choose;
+        switch (choose) {
+            case ('1'):
+                Case1();
+                break;
+            case('2'):
+                Case2();
+                break;
+            case('3'):
+                Case3();
+                break;
+            case('4'):
+                Case4();
+                break;
+            default:
+                cout << "enter correct number";
+        }
+    }
     Block newblock(Btc);
     getLogger().Log(newblock);
 
@@ -23,6 +44,9 @@ int main() {
     cout << "Sizes before adding:" << Btc.getMemPool().size() << " " << Btc.getSortedHashVector().size() << "\n";
     Btc.validateAndAddBlock(newblock);
     cout << "Sizes after adding:" << Btc.getMemPool().size() << " " << Btc.getSortedHashVector().size() << "\n";
+
+    Transaction tx(3,"a","2",1000);
+    Btc.addTransactionToMempool(tx);
 
     while (true){
         Block blockToMine(Btc);
