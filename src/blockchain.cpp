@@ -21,11 +21,11 @@ string MerkleRootHash(const vector<Transaction> &transactions);
 
 Blockchain::Blockchain() {
     // generate users and transactions
-    Logger::getLogger().Log("Initializing blockchain...");
+    getLogger().Log("Initializing blockchain...");
     GenerateUsers();
-    Logger::getLogger().Log("Generated " + to_string(this->users.size()) + " users.");
+    getLogger().Log("Generated " + to_string(this->users.size()) + " users.");
     GenerateMemPool();
-    Logger::getLogger().Log("Generated " + to_string(this->memPool.size()) + " txes and added to mempool.");
+    getLogger().Log("Generated " + to_string(this->memPool.size()) + " txes and added to mempool.");
 
     //satoshi
     User Satoshi("Satoshi Nakamoto", "12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX", 0);
@@ -85,42 +85,42 @@ void Blockchain::validateAndAddBlock(Block &BlockToAdd){
     // check if transactions are in mempool
     for (auto tx : BlockToAdd.getTransactions()) {
         if (memPool.find(tx.getHash()) == memPool.end()) {
-            Logger::getLogger().Log("Block #" + blockHeight + " denied, reason: Txs are not present in mempool");
+            getLogger().Log("Block #" + blockHeight + " denied, reason: Txs are not present in mempool");
             return;
         }
     }
 
     //check merkle root
     if(BlockToAdd.getHeader().merkleRootHash != MerkleRootHash(BlockToAdd.getTransactions())) {
-        Logger::getLogger().Log("Block #" + blockHeight + " denied, reason: MerkleRoot differs");
+        getLogger().Log("Block #" + blockHeight + " denied, reason: MerkleRoot differs");
         return;
     } 
 
     // check if the block has correct previous block hash
     if (BlockToAdd.getHeader().prevBlockHash != this->getLastBlock().getHash()) {
-        Logger::getLogger().Log("Block #" + blockHeight + " denied, reason: Previous block hash does not match");
+        getLogger().Log("Block #" + blockHeight + " denied, reason: Previous block hash does not match");
         return;
     }
 
     //check block hash
     if (BlockToAdd.getHash().empty()) {
-        Logger::getLogger().Log("Block #" + blockHeight + " denied, reason: Hash is empty");
+        getLogger().Log("Block #" + blockHeight + " denied, reason: Hash is empty");
         return;
     }
     // check if hash is correct (according to proof of work)
     if (BlockToAdd.getHash()[0] != '0' || BlockToAdd.getHash()[1] != '0' || BlockToAdd.getHash()[2] != '0') {
-        Logger::getLogger().Log("Block #" + blockHeight + " denied, reason: Hash does not match difficulty");
+        getLogger().Log("Block #" + blockHeight + " denied, reason: Hash does not match difficulty");
         return;
     }
     //check if hash is correct
     if (BlockToAdd.getHash() != HashFunction(BlockToAdd.getHeader().ToString() + std::to_string(BlockToAdd.getHeader().nonce))) {
-        Logger::getLogger().Log("Block #" + blockHeight + " denied, reason: Hash is not correct");
+        getLogger().Log("Block #" + blockHeight + " denied, reason: Hash is not correct");
         return;
     };
 
     this->ExecuteTransactions(BlockToAdd.getTransactions());
     blockList.push_back(BlockToAdd);
-    Logger::getLogger().Log("Block #" + to_string(BlockToAdd.getHeight()) + " added to blockchain!\n");
+    getLogger().Log("Block #" + to_string(BlockToAdd.getHeight()) + " added to blockchain!");
     
 }
 

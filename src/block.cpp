@@ -76,7 +76,7 @@ bool Block::Mine(){
         }
         mHeader.nonce++;
     }
-    Logger::getLogger().Log("Block #" + to_string(this->mHeader.height) + " mined with nonce: " + to_string(mHeader.nonce) + " Hash: " + mHeader.hash);
+    getLogger().Log("Block #" + to_string(this->mHeader.height) + " mined with nonce: " + to_string(mHeader.nonce) + " Hash: " + mHeader.hash);
     return true;
 }
 
