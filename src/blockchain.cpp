@@ -1,10 +1,8 @@
 #include <algorithm>
 #include <cassert>
-#include <format>
 #include <random>
 #include <string>
 #include <vector>
-#include <iostream>
 #include <unordered_map>
 
 #include "../include/blockchain.h"
@@ -12,7 +10,6 @@
 #include "../include/user.h"
 #include "../include/logger.h"
 
-using std::cout;
 using std::vector;
 
 string HashFunction(const string &input);
@@ -146,10 +143,11 @@ void Blockchain::ExecuteTransactions(const vector<Transaction> &transactions){
 
 // Add transaction with verifying
 bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
-
+    
     // check if users exists
     if (users.find(transactionToAdd.getSender()) == users.end() ||
         users.find(transactionToAdd.getReceiver()) == users.end()) {
+        getLogger().Log("Tx #" + to_string(transactionToAdd.getID()) + " denied. Reason: users not found");
         return false;
     }
 
@@ -159,12 +157,14 @@ bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
 
     // check if user has enough to send
     if(transactionToAdd.getAmount() > users.at(transactionToAdd.getSender()).getBalance()) {
+        getLogger().Log("Tx #" + to_string(transactionToAdd.getID()) + " denied. Reason: not enough balance");
         return false;
     }
     
     // check hash
     if (transactionToAdd.getHash()!= 
         HashFunction(std::to_string(transactionToAdd.getID()) + transactionToAdd.getSender() + transactionToAdd.getReceiver() + std::to_string(transactionToAdd.getAmount()) )) {
+        getLogger().Log("Tx #" + to_string(transactionToAdd.getID()) + " denied. Reason: hashes doesnt match");
         return false;
     }
 
@@ -182,6 +182,7 @@ bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
     });
     sortedTransactionHashes.insert(pos, transactionToAdd.getHash());
 
+    getLogger().Log("Tx #" + to_string(transactionToAdd.getID()) + " successfully added to mempool.");
     return true;
 }
 

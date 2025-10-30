@@ -11,8 +11,7 @@ int main() {
     //create blockchain
     Blockchain Btc;
     Transaction tx(3,"a","2",1000);
-    bool check = Btc.addTransactionToMempool(tx);
-    if (!check) getLogger().Log("Transaction " + tx.getHash() + " denied.");
+    Btc.addTransactionToMempool(tx);
 
     getLogger().Log(Btc.getLastBlock());
     Block newblock(Btc);
@@ -32,7 +31,6 @@ int main() {
         getLogger().Log(Btc.getLastBlock());
         if(Btc.getMemPool().size()==0) break;
     }
-
 
 
 }
