@@ -1,5 +1,6 @@
 #include "../include/transaction.h"
 #include <string>
+#include <iostream>
 
 string HashFunction(const string &input);
 
@@ -17,4 +18,12 @@ Transaction::~Transaction(){
     mReceiver.clear();
     mAmount = 0;
     mTransactionID = 0;
+}
+
+void Transaction::coutTx() const {
+    std::cout << "Transaction #" << this->getID() << " info:\n"
+    << "From: " << this->getSender()
+    << "\nTo: " << this->getReceiver()
+    << "\nAmount:" << this->getAmount()
+    << "\nHash: " << this->getHash() << "\n----------\n";
 }

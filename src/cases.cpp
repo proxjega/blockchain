@@ -48,5 +48,11 @@ void Case4(Blockchain &Btc) {
 }
 
 void Case5(Blockchain &Btc) {
-    cout << "good\n";
+    cout << "Mempool's size: "<< Btc.getMemPool().size() << "\n";
+    cout << "The most valuable transaction:\n";
+    auto tx1 = Btc.getMemPool().at(Btc.getSortedHashVector().back());
+    tx1.coutTx();
+    cout << "The least valuable transaction:\n";
+    auto tx2 = Btc.getMemPool().at(Btc.getSortedHashVector().at(0));
+    tx2.coutTx();
 }

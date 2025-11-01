@@ -47,7 +47,7 @@ void Blockchain::GenerateMemPool() {
     std::random_device rd;
     std::mt19937 mt(rd());
     std::uniform_int_distribution<int> userDistribution(0, usersVector.size() - 1);
-    std::uniform_int_distribution<int> amountDistribution(0, 100);
+    std::uniform_int_distribution<int> amountDistribution(1, 100);
     memPool.reserve(10000);
     for (int i = 1; i <= 10000; i++) {
         User user1 = usersVector.at(userDistribution(mt));

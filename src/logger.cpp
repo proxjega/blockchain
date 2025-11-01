@@ -60,12 +60,12 @@ void Logger::Log(const Transaction &txToLog){
     << "From: " << txToLog.getSender()
     << "\nTo: " << txToLog.getReceiver()
     << "\nAmount:" << txToLog.getAmount()
-    << "\nHash: " << txToLog.getHash() << "\n----------";
+    << "\nHash: " << txToLog.getHash() << "\n----------" << endl;
     cout << Timestamp() << "Transaction #" << txToLog.getID() << " info:" << endl
     << "From: " << txToLog.getSender()
     << "\nTo: " << txToLog.getReceiver()
     << "\nAmount:" << txToLog.getAmount()
-    << "\nHash: " << txToLog.getHash() << "\n----------";
+    << "\nHash: " << txToLog.getHash() << "\n----------" << endl;
 }
 
 void Logger::Log(const User &userToLog){

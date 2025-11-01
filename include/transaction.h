@@ -20,4 +20,5 @@ class Transaction {
         string getHash() const { return mTransactionHash;}
         int getAmount() const { return mAmount;}
         int getID() const { return mTransactionID; }
+        void coutTx() const;
 };
