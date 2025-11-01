@@ -34,7 +34,7 @@ void Logger::Log(const string &textToLog) {
 
 void Logger::Log(const Block &blockToLog){
     BlockHeader header = blockToLog.getHeader();
-    logFile << Timestamp() << "Block #" << header.height << ":" << endl
+    logFile << Timestamp() << "Block #" << header.height << " info:" << endl
     << "Hash: " << header.hash << "" << endl
     << "nonce: " << header.nonce << "" << endl
     << "Previous block Hash: " << header.prevBlockHash << "" << endl
@@ -44,7 +44,7 @@ void Logger::Log(const Block &blockToLog){
     << "Difficulty target: " << header.difficultyTarget << "" << endl
     << "Number of transactions: " << blockToLog.getTransactions().size() << "\n----------------" << endl;
 
-    cout << Timestamp() << "Block #" << header.height << ":" << endl
+    cout << Timestamp() << "Block #" << header.height << " info:" << endl
     << "Hash: " << header.hash << "" << endl
     << "nonce: " << header.nonce << "" << endl
     << "Previous block Hash: " << header.prevBlockHash << "" << endl
@@ -56,12 +56,12 @@ void Logger::Log(const Block &blockToLog){
 }
 
 void Logger::Log(const Transaction &txToLog){
-    logFile << Timestamp() << "Transaction #" << txToLog.getID() << ":" << endl
+    logFile << Timestamp() << "Transaction #" << txToLog.getID() << " info:" << endl
     << "From: " << txToLog.getSender()
     << "\nTo: " << txToLog.getReceiver()
     << "\nAmount:" << txToLog.getAmount()
     << "\nHash: " << txToLog.getHash() << "\n----------";
-    cout << Timestamp() << "Transaction #" << txToLog.getID() << ":" << endl
+    cout << Timestamp() << "Transaction #" << txToLog.getID() << " info:" << endl
     << "From: " << txToLog.getSender()
     << "\nTo: " << txToLog.getReceiver()
     << "\nAmount:" << txToLog.getAmount()
@@ -69,10 +69,10 @@ void Logger::Log(const Transaction &txToLog){
 }
 
 void Logger::Log(const User &userToLog){
-    logFile << Timestamp() << "User " << userToLog.getKey() << ":" << endl
+    logFile << Timestamp() << "User " << userToLog.getKey() << " info:" << endl
     << "Name: " << userToLog.getName()
     << "\nBalance: " << userToLog.getBalance() << "\n----------";
-    cout << Timestamp() << "User " << userToLog.getKey() << ":" << endl
+    cout << Timestamp() << "User " << userToLog.getKey() << " info:" << endl
     << "Name: " << userToLog.getName()
     << "\nBalance: " << userToLog.getBalance() << "\n----------";
 }

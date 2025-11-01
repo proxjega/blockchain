@@ -66,6 +66,8 @@ Block::Block(const Blockchain &blockchain){
 bool Block::Mine(){
     if(!mHeader.hash.empty()) return true;
     mHeader.nonce = 0;
+    string blockNumber = to_string(this->mHeader.height);
+    getLogger().Log("Starting to mine block #" + blockNumber + "...");
     while (true) {
         string arg = mHeader.ToString() + std::to_string(mHeader.nonce);
         string hash = HashFunction(arg);
@@ -75,8 +77,9 @@ bool Block::Mine(){
             break;
         }
         mHeader.nonce++;
+        if (mHeader.nonce % 100000 == 0) getLogger().Log("(Block #" + blockNumber + "): " + to_string(mHeader.nonce) + " hashes checked...");
     }
-    getLogger().Log("Block #" + to_string(this->mHeader.height) + " mined with nonce: " + to_string(mHeader.nonce) + " Hash: " + mHeader.hash);
+    getLogger().Log("Block #" + blockNumber + " mined with nonce: " + to_string(mHeader.nonce) + ", Hash: " + mHeader.hash);
     return true;
 }
 

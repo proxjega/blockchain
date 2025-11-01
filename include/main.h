@@ -15,6 +15,7 @@
 #include <random>
 #include <cmath>
 #include <iomanip>
+#include "../include/blockchain.h"
 
 using std::string;
 using std::vector;
@@ -47,7 +48,8 @@ void CollisionTestAI(string fileName);
 void CheckKonstitucijaAI();
 void AvalancheTestAI(string fileName);
 
-void Case1();
-void Case2();
-void Case3();
-void Case4();
+void Case1(Blockchain &Btc);
+void Case2(Blockchain &Btc);
+void Case3(Blockchain &Btc);
+void Case4(Blockchain &Btc);
+void Case5(Blockchain &Btc);
