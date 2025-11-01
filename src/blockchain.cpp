@@ -52,8 +52,10 @@ void Blockchain::GenerateMemPool() {
     for (int i = 1; i <= 10000; i++) {
         User user1 = usersVector.at(userDistribution(mt));
         User user2 = usersVector.at(userDistribution(mt));
-        Transaction transaction(user1.getKey(), user2.getKey(), amountDistribution(mt));
+        int amount = amountDistribution(mt);
+        Transaction transaction(user1.getKey(), user2.getKey(), amount);
         memPool.insert({transaction.getHash(), transaction});
+        this->users.at(user1.getKey()).setPendingBalance(user1.getBalance() - amount);
     }
     
     //create sorted transaction hashes vector (transactions with biggest sent amount will be processed first)
@@ -127,14 +129,20 @@ void Blockchain::ExecuteTransactions(const vector<Transaction> &transactions){
     for(auto tx : transactions) {
         if (tx.getSender() == "Block Reward") {
             auto receiverBalance = users.at(tx.getReceiver()).getBalance();
+            auto receiverPendingBalance = users.at(tx.getReceiver()).getPendingBalance();
+            users.at(tx.getReceiver()).setPendingBalance(receiverPendingBalance + tx.getAmount());
             users.at(tx.getReceiver()).setBalance(receiverBalance + tx.getAmount());
             continue;
         }
-        
+
+        auto receiverPendingBalance = users.at(tx.getReceiver()).getPendingBalance();
         auto receiverBalance = users.at(tx.getReceiver()).getBalance();
+
+        auto senderPendingBalance = users.at(tx.getSender()).getPendingBalance();
         auto senderBalance = users.at(tx.getSender()).getBalance();
 
         users.at(tx.getReceiver()).setBalance(receiverBalance + tx.getAmount());
+        users.at(tx.getReceiver()).setPendingBalance(receiverPendingBalance + tx.getAmount());
         users.at(tx.getSender()).setBalance(senderBalance - tx.getAmount());
         memPool.erase(tx.getHash());
         
@@ -165,7 +173,7 @@ bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
     }
 
     // check if user has enough to send
-    if(transactionToAdd.getAmount() > users.at(transactionToAdd.getSender()).getBalance()) {
+    if(transactionToAdd.getAmount() > users.at(transactionToAdd.getSender()).getPendingBalance()) {
         getLogger().Log("Tx " + transactionToAdd.getHash() + " denied. Reason: not enough balance");
         return false;
     }
@@ -179,6 +187,7 @@ bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
 
     //insert
     memPool.insert({transactionToAdd.getHash(), transactionToAdd});
+    users.at(transactionToAdd.getSender()).setPendingBalance(users.at(transactionToAdd.getSender()).getPendingBalance() - transactionToAdd.getAmount());
 
     // insert into sorted vector
     auto amountToInsert = transactionToAdd.getAmount();
