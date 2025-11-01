@@ -3,13 +3,23 @@
 #include <iostream>
 
 string HashFunction(const string &input);
+string GetCurrentTimeStamp();
 
-Transaction::Transaction(int id, const string& sender, const string& receiver, int amount) {
-    mTransactionID = id;
+Transaction::Transaction(const string& timestamp, const string& sender, const string& receiver, int amount){
+    mTimeStamp = timestamp;
     mSender = sender;
     mReceiver = receiver;
     mAmount = amount;
-    mTransactionHash = HashFunction(std::to_string(id) + sender + receiver + std::to_string(amount) );
+    mTransactionHash = HashFunction(mTimeStamp + sender + receiver + std::to_string(amount) );
+}
+
+
+Transaction::Transaction(const string& sender, const string& receiver, int amount) {
+    mTimeStamp = GetCurrentTimeStamp();
+    mSender = sender;
+    mReceiver = receiver;
+    mAmount = amount;
+    mTransactionHash = HashFunction(mTimeStamp + sender + receiver + std::to_string(amount) );
 }
 
 Transaction::~Transaction(){
@@ -17,13 +27,13 @@ Transaction::~Transaction(){
     mSender.clear();
     mReceiver.clear();
     mAmount = 0;
-    mTransactionID = 0;
+    mTimeStamp.clear();
 }
 
 void Transaction::coutTx() const {
-    std::cout << "Transaction #" << this->getID() << " info:\n"
+    std::cout << "Transaction " << this->getHash() << " info:\n"
     << "From: " << this->getSender()
     << "\nTo: " << this->getReceiver()
     << "\nAmount:" << this->getAmount()
-    << "\nHash: " << this->getHash() << "\n----------\n";
+    << "\nTimestamp: " << this->getTimeStamp() << "\n----------\n";
 }

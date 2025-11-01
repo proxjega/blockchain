@@ -44,6 +44,7 @@ class Blockchain {
         const unordered_map<string, User>& getUsers() const {return users;}
 
         bool addTransactionToMempool(const Transaction &transactionToAdd);
+        void addUser(const User& user);
 
-        void validateAndAddBlock(Block &BlockToAdd); // TODO
+        void validateAndAddBlock(Block &BlockToAdd, User &miner); // TODO
 };

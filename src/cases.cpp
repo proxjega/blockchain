@@ -8,10 +8,10 @@
 using std::cin;
 using std::cout;
 
-void Case1(Blockchain &Btc) {
-    Block blockToMine(Btc);
+void Case1(Blockchain &Btc, User &miner) {
+    Block blockToMine(Btc, miner);
     blockToMine.Mine();
-    Btc.validateAndAddBlock(blockToMine);
+    Btc.validateAndAddBlock(blockToMine, miner);
     getLogger().Log(Btc.getLastBlock());
 }
 
@@ -55,4 +55,12 @@ void Case5(Blockchain &Btc) {
     cout << "The least valuable transaction:\n";
     auto tx2 = Btc.getMemPool().at(Btc.getSortedHashVector().at(0));
     tx2.coutTx();
+}
+
+void Case6(Blockchain &Btc) {
+    cout << "good\n";
+}
+
+void Case7(Blockchain &Btc) {
+    cout << "good\n";
 }

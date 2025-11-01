@@ -31,6 +31,7 @@ void GenerateRandomCharactersOneDifferentTestFiles();
 void GenerateOneCharTestFiles();
 void GenerateFileForCollisionTest();
 void GenerateFileForAvalancheEffectTest();
+string GenerateKey();
 
 void HashTestFiles();
 void CollisionTest(string fileName);
@@ -48,8 +49,10 @@ void CollisionTestAI(string fileName);
 void CheckKonstitucijaAI();
 void AvalancheTestAI(string fileName);
 
-void Case1(Blockchain &Btc);
+void Case1(Blockchain &Btc, User &miner);
 void Case2(Blockchain &Btc);
 void Case3(Blockchain &Btc);
 void Case4(Blockchain &Btc);
 void Case5(Blockchain &Btc);
+void Case6(Blockchain &Btc);
+void Case7(Blockchain &Btc);

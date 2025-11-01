@@ -21,7 +21,7 @@ string Timestamp(){
 }
 
 Logger::Logger(){
-    logFile.open("log/blockchainLog.log", std::ios::app);
+    logFile.open("log/blockchainLog.log");
     if(!logFile) std::cerr << "Error opening logfile!" << endl;
     logFile << Timestamp() << "PROGRAM STARTED ----------------------" << endl;
     cout << Timestamp() << "PROGRAM STARTED ----------------------" << endl;
@@ -56,16 +56,16 @@ void Logger::Log(const Block &blockToLog){
 }
 
 void Logger::Log(const Transaction &txToLog){
-    logFile << Timestamp() << "Transaction #" << txToLog.getID() << " info:" << endl
+    logFile << Timestamp() << "Transaction " << txToLog.getHash() << " info:\n"
     << "From: " << txToLog.getSender()
     << "\nTo: " << txToLog.getReceiver()
     << "\nAmount:" << txToLog.getAmount()
-    << "\nHash: " << txToLog.getHash() << "\n----------" << endl;
-    cout << Timestamp() << "Transaction #" << txToLog.getID() << " info:" << endl
+    << "\nTimestamp: " << txToLog.getTimeStamp() << "\n----------\n";
+    cout << Timestamp() << "Transaction " << txToLog.getHash() << " info:\n"
     << "From: " << txToLog.getSender()
     << "\nTo: " << txToLog.getReceiver()
     << "\nAmount:" << txToLog.getAmount()
-    << "\nHash: " << txToLog.getHash() << "\n----------" << endl;
+    << "\nTimestamp: " << txToLog.getTimeStamp() << "\n----------\n";
 }
 
 void Logger::Log(const User &userToLog){

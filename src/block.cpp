@@ -20,14 +20,14 @@ Block::Block(const User &Satoshi){
         nullHash.push_back('0');
     }
     mHeader.prevBlockHash = nullHash;
-    Transaction firstTransaction(0, "Block Reward", Satoshi.getKey(), 50);
+    Transaction firstTransaction("2009-01-09 04:54:25", "Block Reward", Satoshi.getKey(), 50);
     this->mData.push_back(firstTransaction);
     mHeader.timestamp = "2009-01-09 04:54:25";
     mHeader.version = "1";
     mHeader.height = 0;
     mHeader.merkleRootHash = MerkleRootHash(mData);
     mHeader.difficultyTarget = 3;
-    long long int nonce = 130948;
+    long long int nonce = 80800;
     while (true) {
         string arg = mHeader.ToString() + std::to_string(nonce);
         string hash = HashFunction(arg);
@@ -40,12 +40,15 @@ Block::Block(const User &Satoshi){
     }
 }
 
-Block::Block(const Blockchain &blockchain){
+Block::Block(const Blockchain &blockchain, User &miner){
     mHeader.hash.clear();
     mHeader.prevBlockHash = blockchain.getLastBlock().getHash();
     mHeader.version = "1";
     mHeader.difficultyTarget = 3;
     mHeader.height = blockchain.getLastBlock().getHeight() + 1;
+
+    Transaction Reward("Block Reward", miner.getKey(), 50);
+    mData.push_back(Reward);
 
     // push 100 tx
     if (blockchain.getSortedHashVector().size() > 100){
@@ -94,6 +97,10 @@ void Block::CoutBlock() const {
     << "Merkle root hash: " << mHeader.merkleRootHash << "" << endl
     << "Difficulty target: " << mHeader.difficultyTarget << "" << endl
     << "Number of transactions: " << this->getTransactions().size() << "\n----------------" << endl;
+}
+
+void Block::addTransaction(const Transaction &tx){
+    this->mData.push_back(tx);
 }
 
 

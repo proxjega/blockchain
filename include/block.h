@@ -49,16 +49,19 @@ class Block {
         Block(const User &satoshi);
 
         //new block with 100 random transactions
-        Block(const Blockchain &blockchain);
+        Block(const Blockchain &blockchain, User &miner);
 
         //getters and setters
+        long long int getNonce() const {return mHeader.nonce;}
         BlockHeader getHeader() const {return mHeader;}
         string getHash() const {return mHeader.hash;}
         long int getHeight() const {return mHeader.height;}
         const vector<Transaction> &getTransactions() const  {return mData;}
         void setHeader(BlockHeader header);
         void setTransactions(vector<Transaction> transactions);
-        
+
+        void addTransaction(const Transaction &tx);
+
         void CoutBlock() const;
         bool Mine();
 };
