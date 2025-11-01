@@ -43,10 +43,10 @@ int main() {
                 Case6(Btc, yourUser);
                 break;
             case('7'):
-                Case7(Btc);
+                Case7(Btc, yourUser);
                 break;
             default:
-                cout << "enter correct number";
+                cout << "Enter correct number\n";
         }
     }
 

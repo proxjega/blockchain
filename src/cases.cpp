@@ -27,7 +27,7 @@ void Case4(Blockchain &Btc) {
     int blockchainSize = Btc.getBlockChain().size();
     cout << "Blockchain has " << blockchainSize << " blocks.\nWhich block info do you want?\n";
     int blockNumber;
-     while (true) {
+    while (true) {
         cin >> blockNumber;
         
         if (cin.fail()) {
@@ -62,6 +62,23 @@ void Case6(Blockchain &Btc, const User& user) {
     getLogger().Log(userToShow);
 }
 
-void Case7(Blockchain &Btc) {
-    cout << "good\n";
-}
+void Case7(Blockchain &Btc, User& sender) {
+    cout << "To who do you want to sent crypto?\n";
+    string receiver;
+    cin >> receiver;
+    cout << "How many bitcoins do you want to send?\n";
+    int amount = 0;
+    while (true) {
+        cin >> amount;
+        
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            cout << "Enter correct amount: ";
+            continue;
+        }
+        break;
+    }
+    Transaction tx(sender.getKey(), receiver, amount);
+    Btc.addTransactionToMempool(tx);
+} 
