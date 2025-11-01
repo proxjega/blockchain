@@ -77,7 +77,7 @@ bool Block::Mine(){
             break;
         }
         mHeader.nonce++;
-        if (mHeader.nonce % 100000 == 0) getLogger().Log("(Block #" + blockNumber + "): " + to_string(mHeader.nonce) + " hashes checked...");
+        if (mHeader.nonce % 1000000 == 0) getLogger().Log("(Block #" + blockNumber + "): " + to_string(mHeader.nonce) + " hashes checked...");
     }
     getLogger().Log("Block #" + blockNumber + " mined with nonce: " + to_string(mHeader.nonce) + ", Hash: " + mHeader.hash);
     return true;
@@ -85,14 +85,15 @@ bool Block::Mine(){
 
 
 void Block::CoutBlock() const {
-    cout << "Hash: " << mHeader.hash << "\n"
-    << "nonce: " << mHeader.nonce << "\n"
-    << "Previous block Hash: " << mHeader.prevBlockHash << "\n"
-    << "Timestamp: " << mHeader.timestamp << "\n"
-    << "version: " << mHeader.version << "\n"
-    << "Merkle root hash: " << mHeader.merkleRootHash << "\n"
-    << "Difficulty target: " << mHeader.difficultyTarget << "\n"
-    << "Number of transactions: " << mData.size() << "\n\n";
+    cout << "Block #" << mHeader.height << " info:" << endl
+    << "Hash: " << mHeader.hash << "" << endl
+    << "nonce: " << mHeader.nonce << "" << endl
+    << "Previous block Hash: " << mHeader.prevBlockHash << "" << endl
+    << "Timestamp: " << mHeader.timestamp << "" << endl
+    << "version: " << mHeader.version << "" << endl
+    << "Merkle root hash: " << mHeader.merkleRootHash << "" << endl
+    << "Difficulty target: " << mHeader.difficultyTarget << "" << endl
+    << "Number of transactions: " << this->getTransactions().size() << "\n----------------" << endl;
 }
 
 

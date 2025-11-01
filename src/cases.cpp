@@ -5,7 +5,7 @@
 #include "../include/logger.h"
 #include "../include/blockchain.h"
 
-
+using std::cin;
 using std::cout;
 
 void Case1(Blockchain &Btc) {
@@ -24,5 +24,29 @@ void Case3(Blockchain &Btc) {
 }
 
 void Case4(Blockchain &Btc) {
+    int blockchainSize = Btc.getBlockChain().size();
+    cout << "Blockchain has " << blockchainSize << " blocks.\nWhich block info do you want?\n";
+    int blockNumber;
+     while (true) {
+        cin >> blockNumber;
+        
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            cout << "Invalid input. Please enter a number: ";
+            continue;
+        }
+        
+        if (blockNumber >= 0 && blockNumber < blockchainSize) {
+            auto block = Btc.getBlock(blockNumber);
+            block.CoutBlock();
+            break; // Valid input, exit loop
+        } else {
+            cout << "Block number must be between 0 and " << (blockchainSize - 1) << ". Please try again: ";
+        }
+    }
+}
+
+void Case5(Blockchain &Btc) {
     cout << "good\n";
 }

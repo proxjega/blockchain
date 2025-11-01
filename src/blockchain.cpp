@@ -186,6 +186,16 @@ bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
     return true;
 }
 
+Block Blockchain::getBlock(int n) const {
+    int counter = 0;
+    for (auto block : blockList) {
+        if (counter == n) return block;
+        counter ++;
+    }
+    return blockList.back();
+}
+
+
 Blockchain::~Blockchain(){
     blockList.clear();
     memPool.clear();

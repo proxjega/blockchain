@@ -15,7 +15,7 @@ int main() {
     getLogger().Log(Btc.getLastBlock());
 
     while (true) {
-        cout << "Choose what to do:\n1 - mine 1 block\n2 - mine 5 blocks for 5 secs\n3 - validation check\n4 - get block info\n5 - get mempool info";
+        cout << "Choose what to do:\n1 - mine 1 block\n2 - mine 5 blocks for 5 secs\n3 - validation check\n4 - get block info\n5 - get mempool info\n";
         char choose;
         cin >> choose;
         switch (choose) {
