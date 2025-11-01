@@ -57,8 +57,9 @@ void Case5(Blockchain &Btc) {
     tx2.coutTx();
 }
 
-void Case6(Blockchain &Btc) {
-    cout << "good\n";
+void Case6(Blockchain &Btc, const User& user) {
+    auto userToShow = Btc.getUsers().at(user.getKey());
+    getLogger().Log(userToShow);
 }
 
 void Case7(Blockchain &Btc) {

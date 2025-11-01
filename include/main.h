@@ -54,5 +54,5 @@ void Case2(Blockchain &Btc);
 void Case3(Blockchain &Btc);
 void Case4(Blockchain &Btc);
 void Case5(Blockchain &Btc);
-void Case6(Blockchain &Btc);
+void Case6(Blockchain &Btc, const User& user);
 void Case7(Blockchain &Btc);

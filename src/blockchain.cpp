@@ -81,6 +81,7 @@ void Blockchain::validateAndAddBlock(Block &BlockToAdd, User &miner){
 
     // check if transactions are in mempool
     for (auto tx : BlockToAdd.getTransactions()) {
+        if(tx.getSender() == "Block Reward") continue;
         if (memPool.find(tx.getHash()) == memPool.end()) {
             getLogger().Log("Block #" + blockHeight + " denied, reason: Txs are not present in mempool");
             return;
