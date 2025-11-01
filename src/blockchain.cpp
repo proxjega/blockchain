@@ -30,7 +30,7 @@ Blockchain::Blockchain() {
 
     // add genesis block
     Block genesisBlock(Satoshi);
-    // this->ExecuteTransactions(genesisBlock, users);
+    this->ExecuteTransactions(genesisBlock.getTransactions());
     blockList.push_back(genesisBlock);
 }
 
@@ -78,7 +78,7 @@ void Blockchain::GenerateUsers(){
     }
 }
 
-void Blockchain::validateAndAddBlock(Block &BlockToAdd, User &miner){
+void Blockchain::validateAndAddBlock(Block &BlockToAdd){
     string blockHeight = to_string(BlockToAdd.getHeight());
 
     // check if transactions are in mempool
@@ -138,11 +138,9 @@ void Blockchain::ExecuteTransactions(const vector<Transaction> &transactions){
         auto receiverPendingBalance = users.at(tx.getReceiver()).getPendingBalance();
         auto receiverBalance = users.at(tx.getReceiver()).getBalance();
 
-        auto senderPendingBalance = users.at(tx.getSender()).getPendingBalance();
         auto senderBalance = users.at(tx.getSender()).getBalance();
 
         users.at(tx.getReceiver()).setBalance(receiverBalance + tx.getAmount());
-        users.at(tx.getReceiver()).setPendingBalance(receiverPendingBalance + tx.getAmount());
         users.at(tx.getSender()).setBalance(senderBalance - tx.getAmount());
         memPool.erase(tx.getHash());
         
@@ -188,7 +186,7 @@ bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
     //insert
     memPool.insert({transactionToAdd.getHash(), transactionToAdd});
     users.at(transactionToAdd.getSender()).setPendingBalance(users.at(transactionToAdd.getSender()).getPendingBalance() - transactionToAdd.getAmount());
-
+    users.at(transactionToAdd.getReceiver()).setPendingBalance(users.at(transactionToAdd.getReceiver()).getPendingBalance() + transactionToAdd.getAmount());
     // insert into sorted vector
     auto amountToInsert = transactionToAdd.getAmount();
     auto pos = std::lower_bound(

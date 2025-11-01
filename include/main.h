@@ -51,8 +51,9 @@ void AvalancheTestAI(string fileName);
 
 void Case1(Blockchain &Btc, User &miner);
 void Case2(Blockchain &Btc);
-void Case3(Blockchain &Btc);
-void Case4(Blockchain &Btc);
-void Case5(Blockchain &Btc);
-void Case6(Blockchain &Btc, const User& user);
-void Case7(Blockchain &Btc, User& sender);
+void Case3(const Blockchain &Btc);
+void Case4(const Blockchain &Btc);
+void Case5(const Blockchain &Btc);
+void Case6(const Blockchain &Btc, const User& user);
+void Case7(const Blockchain &Btc);
+void Case8(Blockchain &Btc, User& sender);

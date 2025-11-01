@@ -71,11 +71,11 @@ void Logger::Log(const Transaction &txToLog){
 void Logger::Log(const User &userToLog){
     logFile << Timestamp() << "User " << userToLog.getKey() << " info:" << endl
     << "Name: " << userToLog.getName()
-    << "\nBalance: " << userToLog.getBalance() << "\n"
+    << "\nBalance: " << userToLog.getBalance()
     << "\nPending balance: " << userToLog.getPendingBalance() << "\n----------" << endl;
     cout << Timestamp() << "User " << userToLog.getKey() << " info:" << endl
     << "Name: " << userToLog.getName()
-    << "\nBalance: " << userToLog.getBalance() << "\n"
+    << "\nBalance: " << userToLog.getBalance()
     << "\nPending balance: " << userToLog.getPendingBalance() << "\n----------" << endl;
 }
 

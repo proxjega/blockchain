@@ -46,5 +46,5 @@ class Blockchain {
         bool addTransactionToMempool(const Transaction &transactionToAdd);
         void addUser(const User& user);
 
-        void validateAndAddBlock(Block &BlockToAdd, User &miner); // TODO
+        void validateAndAddBlock(Block &BlockToAdd); // TODO
 };
