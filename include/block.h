@@ -64,4 +64,5 @@ class Block {
 
         void CoutBlock() const;
         bool Mine();
+        bool Mine5secs();
 };

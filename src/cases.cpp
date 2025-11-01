@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "../include/user.h"
 #include "../include/transaction.h"
 #include "../include/blockchain.h"
@@ -16,7 +17,27 @@ void Case1(Blockchain &Btc, User &miner) {
 }
 
 void Case2(Blockchain &Btc) {
-    cout << "good\n";
+    int counter = 0;
+    vector<User> miners;
+    for (auto user : Btc.getUsers()) {
+        miners.push_back(user.second);
+        getLogger().Log(user.second);
+        counter++;
+        if (counter == 5 ) break;
+    }
+    vector<Block> blocks;
+    for (int i = 0; i < 5; i++) {
+        Block block(Btc, miners.at(i));
+        blocks.push_back(block);
+        getLogger().Log(block);
+    }
+    for (auto &block : blocks) {
+        block.Mine5secs();
+    }
+    for (auto block : blocks) {
+        getLogger().Log(block);
+        Btc.validateAndAddBlock(block);
+    }
 }
 
 void Case3(const Blockchain &Btc) {

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <chrono>
 
 #include "../include/block.h"
 #include "../include/blockchain.h"
@@ -27,7 +28,7 @@ Block::Block(const User &Satoshi){
     mHeader.height = 0;
     mHeader.merkleRootHash = MerkleRootHash(mData);
     mHeader.difficultyTarget = 3;
-    long long int nonce = 80800;
+    long long int nonce = 0;
     while (true) {
         string arg = mHeader.ToString() + std::to_string(nonce);
         string hash = HashFunction(arg);
@@ -81,6 +82,36 @@ bool Block::Mine(){
         }
         mHeader.nonce++;
         if (mHeader.nonce % 1000000 == 0) getLogger().Log("(Block #" + blockNumber + "): " + to_string(mHeader.nonce) + " hashes checked...");
+    }
+    getLogger().Log("Block #" + blockNumber + " mined with nonce: " + to_string(mHeader.nonce) + ", Hash: " + mHeader.hash);
+    return true;
+}
+
+bool Block::Mine5secs(){
+    if(!mHeader.hash.empty()) return true;
+    mHeader.nonce = 0;
+    string blockNumber = to_string(this->mHeader.height);
+    getLogger().Log("Starting to mine block #" + blockNumber + "...");
+    auto start = std::chrono::high_resolution_clock::now();
+    auto end = std::chrono::high_resolution_clock::now();
+    while (true) {
+        string arg = mHeader.ToString() + std::to_string(mHeader.nonce);
+        string hash = HashFunction(arg);
+        if (hash[0] == '0' && hash[1] == '0' && hash[2] == '0') {
+            mHeader.hash = hash;
+            mHeader.timestamp = GetCurrentTimeStamp();
+            break;
+        }
+        mHeader.nonce++;
+        if (mHeader.nonce % 1000000 == 0) {
+            getLogger().Log("(Block #" + blockNumber + "): " + to_string(mHeader.nonce) + " hashes checked...");
+            end = std::chrono::high_resolution_clock::now();
+            auto seconds = duration_cast<std::chrono::seconds>(end - start);
+            if (seconds.count() > 5) {
+                getLogger().Log("Stopping mining after 5 seconds.");
+                return false;
+            }
+        }
     }
     getLogger().Log("Block #" + blockNumber + " mined with nonce: " + to_string(mHeader.nonce) + ", Hash: " + mHeader.hash);
     return true;
