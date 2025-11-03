@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include "../include/user.h"
 #include "../include/transaction.h"
 #include "../include/blockchain.h"

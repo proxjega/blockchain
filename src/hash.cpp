@@ -5,7 +5,6 @@
 #include <random>
 #include <iostream>
 #include <iomanip>
-#include <array>
 
 using std::vector;
 using std::string;
