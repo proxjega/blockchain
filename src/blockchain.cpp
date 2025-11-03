@@ -16,7 +16,7 @@ string HashFunction(const string &input);
 string MerkleRootHash(const vector<Transaction> &transactions);
 
 
-Blockchain::Blockchain() {
+Blockchain::Blockchain() : difficulty(3) {
     // generate users and transactions
     getLogger().Log("Initializing blockchain...");
     GenerateUsers();
@@ -24,7 +24,6 @@ Blockchain::Blockchain() {
     GenerateMemPool();
     getLogger().Log("Generated " + to_string(this->memPool.size()) + " txes and added to mempool.");
 
-    difficulty = 3;
     //satoshi
     User Satoshi("Satoshi Nakamoto", "12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX", 0);
     this->users.insert({Satoshi.getKey(), Satoshi});
@@ -36,14 +35,14 @@ Blockchain::Blockchain() {
 }
 
 void Blockchain::GenerateMemPool() {
-    
+
     // vector for fast random access
     vector<User> usersVector;
     usersVector.reserve(1000);
     for (auto it = users.begin(); it!=users.end(); it++) {
         usersVector.push_back(it->second);
     }
-    
+
     //generate mempool
     std::random_device rd;
     std::mt19937 mt(rd());
@@ -58,7 +57,7 @@ void Blockchain::GenerateMemPool() {
         memPool.insert({transaction.getHash(), transaction});
         this->users.at(user1.getKey()).setPendingBalance(user1.getBalance() - amount);
     }
-    
+
     //create sorted transaction hashes vector (transactions with biggest sent amount will be processed first)
     for (auto transaction : memPool) {
         sortedTransactionHashes.push_back(transaction.first);
@@ -95,7 +94,7 @@ void Blockchain::validateAndAddBlock(Block &BlockToAdd){
     if(BlockToAdd.getHeader().merkleRootHash != MerkleRootHash(BlockToAdd.getTransactions())) {
         getLogger().Log("Block #" + blockHeight + " denied, reason: MerkleRoot differs");
         return;
-    } 
+    }
 
     // check if the block has correct previous block hash
     if (BlockToAdd.getHeader().prevBlockHash != this->getLastBlock().getHash()) {
@@ -108,7 +107,7 @@ void Blockchain::validateAndAddBlock(Block &BlockToAdd){
         getLogger().Log("Block #" + blockHeight + " denied, reason: Hash is empty");
         return;
     }
-    
+
     // check if hash is correct (according to proof of work)
     bool valid = true;
     for (int i = 0; i < difficulty; i++) {
@@ -129,7 +128,9 @@ void Blockchain::validateAndAddBlock(Block &BlockToAdd){
     this->ExecuteTransactions(BlockToAdd.getTransactions());
     blockList.push_back(BlockToAdd);
     getLogger().Log("Block #" + to_string(BlockToAdd.getHeight()) + " added to blockchain!");
-    
+    getLogger().Log("User \"" + users.at(BlockToAdd.getTransactions().at(0).getReceiver()).getName() +
+    "\" got the reward!");
+
     if (BlockToAdd.getMiningTime().count() > 10000) {
         this->difficulty-=1;
         getLogger().Log("Difficulty decreased by 1");
@@ -137,7 +138,7 @@ void Blockchain::validateAndAddBlock(Block &BlockToAdd){
     if (BlockToAdd.getMiningTime().count() < 1000){
         getLogger().Log("Difficulty increased by 1");
         this->difficulty+=1;
-    } 
+    }
 }
 
 void Blockchain::ExecuteTransactions(const vector<Transaction> &transactions){
@@ -159,13 +160,13 @@ void Blockchain::ExecuteTransactions(const vector<Transaction> &transactions){
         users.at(tx.getReceiver()).setBalance(receiverBalance + tx.getAmount());
         users.at(tx.getSender()).setBalance(senderBalance - tx.getAmount());
         memPool.erase(tx.getHash());
-        
+
     }
 
     //clear completed transactions from sortedTransactionHashes
-    if (sortedTransactionHashes.size() > 100) 
+    if (sortedTransactionHashes.size() > 100)
         sortedTransactionHashes.erase(sortedTransactionHashes.end() - 100, sortedTransactionHashes.end());
-    else    
+    else
         sortedTransactionHashes.clear();
 
 
@@ -174,7 +175,7 @@ void Blockchain::ExecuteTransactions(const vector<Transaction> &transactions){
 
 // Add transaction with verifying
 bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
-    
+
     // check if users exists
     if (users.find(transactionToAdd.getSender()) == users.end() ||
         users.find(transactionToAdd.getReceiver()) == users.end()) {
@@ -191,9 +192,9 @@ bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
         getLogger().Log("Tx " + transactionToAdd.getHash() + " denied. Reason: not enough balance");
         return false;
     }
-    
+
     // check hash
-    if (transactionToAdd.getHash()!= 
+    if (transactionToAdd.getHash()!=
         HashFunction(transactionToAdd.getTimeStamp() + transactionToAdd.getSender() + transactionToAdd.getReceiver() + std::to_string(transactionToAdd.getAmount()) )) {
         getLogger().Log("Tx " + transactionToAdd.getHash() + " denied. Reason: hashes doesnt match");
         return false;
@@ -206,9 +207,9 @@ bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
     // insert into sorted vector
     auto amountToInsert = transactionToAdd.getAmount();
     auto pos = std::lower_bound(
-        sortedTransactionHashes.begin(), 
-        sortedTransactionHashes.end(), 
-        amountToInsert, 
+        sortedTransactionHashes.begin(),
+        sortedTransactionHashes.end(),
+        amountToInsert,
         [this](const string& existingHash, int amount) -> bool{
         return memPool.at(existingHash).getAmount() < amount;
     });
@@ -227,7 +228,9 @@ void Blockchain::addUser(const User& user){
 Block Blockchain::getBlock(int n) const {
     int counter = 0;
     for (auto block : blockList) {
-        if (counter == n) return block;
+        if (counter == n){
+            return block;
+        }
         counter ++;
     }
     return blockList.back();

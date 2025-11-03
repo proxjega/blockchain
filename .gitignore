@@ -549,7 +549,7 @@ target_wrapper.*
 # QtCreator CMake
 CMakeLists.txt.user*
 
-# QtCreator 4.8< compilation database 
+# QtCreator 4.8< compilation database
 compile_commands.json
 
 # QtCreator local machine specific files for imported projects
@@ -1063,3 +1063,9 @@ test.txt
 /testcases/
 test2.txt
 rodmap.txt
+.clang-format
+.gitignore
+.clangd
+.clang-tidy
+.gitignore
+.editorconfig

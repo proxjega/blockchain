@@ -25,16 +25,11 @@ void Case2(Blockchain &Btc) {
         counter++;
         if (counter == 5 ) break;
     }
-    vector<Block> blocks;
+
+#pragma omp parallel for
     for (int i = 0; i < 5; i++) {
         Block block(Btc, miners.at(i));
-        blocks.push_back(block);
-        getLogger().Log(block);
-    }
-    for (auto &block : blocks) {
         block.Mine5secs();
-    }
-    for (auto block : blocks) {
         getLogger().Log(block);
         Btc.validateAndAddBlock(block);
     }
@@ -46,14 +41,14 @@ void Case3(const Blockchain &Btc) {
     int blockNumber;
     while (true) {
         cin >> blockNumber;
-        
+
         if (cin.fail()) {
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             cout << "Invalid input. Please enter a number: ";
             continue;
         }
-        
+
         if (blockNumber >= 0 && blockNumber < blockchainSize) {
             auto block = Btc.getBlock(blockNumber);
             getLogger().Log(block);
@@ -70,14 +65,14 @@ void Case4(const Blockchain &Btc) {
     int blockNumber;
     while (true) {
         cin >> blockNumber;
-        
+
         if (cin.fail()) {
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             cout << "Invalid input. Please enter a number: ";
             continue;
         }
-        
+
         if (blockNumber >= 0 && blockNumber < blockchainSize) {
             auto block = Btc.getBlock(blockNumber);
             getLogger().Log(block);
@@ -126,7 +121,7 @@ void Case8(Blockchain &Btc, User& sender) {
     int amount = 0;
     while (true) {
         cin >> amount;
-        
+
         if (cin.fail()) {
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -137,4 +132,4 @@ void Case8(Blockchain &Btc, User& sender) {
     }
     Transaction tx(sender.getKey(), receiver, amount);
     Btc.addTransactionToMempool(tx);
-} 
+}

@@ -21,7 +21,7 @@ int main() {
     User yourUser(name, GenerateKey(), 0);
     Btc.addUser(yourUser);
     while (true) {
-        cout << "Choose what to do:\n1 - mine 1 block\n2 - mine 5 blocks for 5 secs\n3 - get block info\n4 - get block info (super verbose)\n5 - get mempool info\n6 - my user info\n7 - user info by key\n8 - send crypto\n";
+        cout << "Choose what to do:\n1 - mine 1 block\n2 - mine 5 blocks in parallel for 5 secs\n3 - get block info\n4 - get block info (super verbose)\n5 - get mempool info\n6 - my user info\n7 - user info by key\n8 - send crypto\n";
         char choose;
         cin >> choose;
         switch (choose) {

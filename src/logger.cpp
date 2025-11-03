@@ -16,7 +16,7 @@ string Timestamp(){
     auto now = std::chrono::system_clock::now();
     auto now_ms = floor<std::chrono::milliseconds>(now);
     string time = std::format("[{:%Y-%m-%d %H:%M:%S}] ", now_ms);
-    
+
     return time;
 }
 
@@ -42,7 +42,8 @@ void Logger::Log(const Block &blockToLog){
     << "version: " << header.version << "" << endl
     << "Merkle root hash: " << header.merkleRootHash << "" << endl
     << "Difficulty target: " << header.difficultyTarget << "" << endl
-    << "Number of transactions: " << blockToLog.getTransactions().size() << "\n----------------" << endl;
+    << "Number of transactions: " << blockToLog.getTransactions().size() << endl
+    << "Miner: " << blockToLog.getTransactions().at(0).getReceiver() << "\n----------------" << endl;
 
     cout << Timestamp() << "Block #" << header.height << " info:" << endl
     << "Hash: " << header.hash << "" << endl
@@ -52,7 +53,8 @@ void Logger::Log(const Block &blockToLog){
     << "version: " << header.version << "" << endl
     << "Merkle root hash: " << header.merkleRootHash << "" << endl
     << "Difficulty target: " << header.difficultyTarget << "" << endl
-    << "Number of transactions: " << blockToLog.getTransactions().size() << "\n----------------" << endl;
+    << "Number of transactions: " << blockToLog.getTransactions().size() << endl
+    << "Miner: " << blockToLog.getTransactions().at(0).getReceiver() << "\n----------------" << endl;
 }
 
 void Logger::Log(const Transaction &txToLog){

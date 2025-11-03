@@ -11,6 +11,8 @@ class User {
         int mPendingBalance;
     public:
         User() = default;
+        User(const User &other) = default;
+        User& operator=(const User &other) = default;
         User(const string &name);
         User(const string &name, const string &key, int balance);
         ~User();
@@ -21,4 +23,4 @@ class User {
         int getPendingBalance() const { return mPendingBalance; }
         void setBalance(int newBalance) { mBalance = newBalance;}
         void setPendingBalance(int newBalance) {mPendingBalance = newBalance;}
-}; 
+};
