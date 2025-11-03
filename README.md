@@ -1,215 +1,387 @@
-## Pseudo-kodas:
+# Bloku grandine
+Cia yra mano bloku grandine. 
+- Realizuota naudojant account model
+- Yra transakciju ir bloku pridejimo validavimas
+- Bloku kasimo sunkumas keiciasi priklausomai nuo kasimo laiko
+- Uz bloku kasima yra atlygis (50 btc) 
+### Bloku grandine realizuote per kelias klases:
+## Blockchain klase:
 ```c++
-string HashFunction(string input) {
-    const int HASH_LENGTH = 64;
-    list<int> values;
-    long int uniqueStringNumber = 1;
-    int counter = 0;
+class Blockchain {
+    private:
+        list<Block> blockList;
+        unordered_map<string, User> users;
+        unordered_map<string, Transaction> memPool;
+        vector<string> sortedTransactionHashes;
 
-    // Convert input into integer values and update uniqueNumber
-    for each character c in input {
-        int val = integer value of c (absolute);
-        add val to values;
+        int difficulty;
+        // private methods (are called only by blockchain itself)
+        void ExecuteTransactions(const vector<Transaction> &transactions); //TODO
+        void GenerateUsers();
+        void GenerateMemPool();
+    public:
+        // constructors
+        Blockchain();
+        ~Blockchain();
 
-        update uniqueStringNumber based on counter and val;
-        counter = counter + 1;
-    }
+        // getters and setters
+        const Block& getLastBlock() const { return blockList.back();}
+        Block getBlock(int n) const;
+        int getDifficulty() const {return difficulty; }
 
-    // Initialize random generator with uniqueStringNumber
-    initialize random generator using uniqueStringNumber;
+        // protected getters
+        const list<Block>& getBlockChain() const {return blockList;}
+        const unordered_map<string, Transaction>& getMemPool() const {return memPool;}
+        const vector<string>& getSortedHashVector() const {return sortedTransactionHashes;}
+        const unordered_map<string, User>& getUsers() const {return users;}
 
-    int hash[HASH_LENGTH] = {0};
-
-    // Distribute input values into hash
-    for each val in values {
-        int idx = random index between 0 and HASH_LENGTH-1;
-        hash[idx] = hash[idx] + val;
-    }
-
-    // Add randomness and reduce values modulo 16
-    for i from 0 to HASH_LENGTH-1 {
-        int offset = random number between 0 and 15;
-        hash[i] = (hash[i] + offset) mod 16;
-    }
-
-    // Convert result to hex string
-    string hexstr = "";
-    for i from 0 to HASH_LENGTH-1 {
-        append hex representation of hash[i] to hexstr;
-    }
-
-    return hexstr;
-}
-
+        // user methods
+        bool addTransactionToMempool(const Transaction &transactionToAdd);
+        void addUser(const User& user);
+        void validateAndAddBlock(Block &BlockToAdd); // TODO
+};
 ```
-### Kaip veikia:
-1. Kiekvienas input'o simbolis konvertuojamas į skaičių ir saugomas. Taip pat pagal algoritmą generuojamas uniqueStringNumber
-2. Inicializuojamas random generatorius naudojant uniqueStringNumber
-3. Kiekvienas išsaugotas simbolio skaičius pridedamas i atsitiktinią vietą hash'e
-4. Prie kiekvieno hash'o skaičiaus pridedama atsitiktinė reikšmė
-5. Randamas likutis dalijant iš 16 (hex'ui)
-6. Viskas konvertuojama i string'ą ir grąžinama
-
-## Eksperimentinis tyrimas:
-### 1. Testiniai failai <br /> 
-#### Buvo sukurti testiniai failai: <br /> <img width="1800" height="1138" alt="image" src="https://github.com/user-attachments/assets/d02aed22-e689-46c2-9c5f-f707c7184a97" />
-### 2. Išvedimo dydis <br />
-#### Failai suhash'inti (matosi, kad hash'ai vienodo ilgio): <br /> <img width="1326" height="659" alt="image" src="https://github.com/user-attachments/assets/daaf8964-bf64-4531-8eb5-ce3293c9751d" />
-### 3. Deterministiškumas matomas: <br /> <img width="929" height="234" alt="image" src="https://github.com/user-attachments/assets/0079a7ea-a2ab-4b7c-b51d-aee0cead0875" />
-### 4. Sparta <br />
-#### Konstitucija.txt failo skirtingi eilučių kiekiai buvo suhashinti: <img width="795" height="384" alt="image" src="https://github.com/user-attachments/assets/40ef1382-f28d-4c34-808b-19e20a994a0e" />
-(čia yra pateiktas vidurkis iš 5 hash'ų)<br />
-<img width="727" height="451" alt="image" src="https://github.com/user-attachments/assets/8bbd3ded-ec0c-4d55-9686-dd5359d32587" /><br />
-### 5. Kolizijos <br />
-#### Buvo sukurti po 100 000 random string poru:<br />
-<img width="1469" height="665" alt="image" src="https://github.com/user-attachments/assets/5f12e85b-9777-46f5-aa3b-d3a2bcccd08e" /><br />
-(eina pora po 10 simboliu, po to pora po 100 simboliu, po to pora po 500 ir pora po 1000, po to vel po 10 simboliu ir t. t.)<br />
-### Koliziju rasta:<br />
-<img width="822" height="92" alt="image" src="https://github.com/user-attachments/assets/6251a70b-f67a-4ae9-832c-b1d7e8450a4d" /><br />
-### 6. Lavinos efektas: <br />
-#### Buvo sukurti po 100 000 skirtingiu ilgiu stringu poros, kur skiriasi pirmi simboliai:<br />
-<img width="1583" height="655" alt="image" src="https://github.com/user-attachments/assets/5440b5d7-c6fd-4b35-ad6e-daf2eec6a262" /><br />
-### Panašumai (procentais):<br />
-<img width="706" height="377" alt="image" src="https://github.com/user-attachments/assets/fcc72ca5-ee17-4adc-b91c-a69f6cdb3738" /><br />
-### 7. Negrižtamumo demonstacija:<br />
-<img width="834" height="310" alt="image" src="https://github.com/user-attachments/assets/9e7c85f4-373f-4bc6-94e4-898c208f07e9" />  <br />
-## Išvada: 
-### Stiprumai:
-- Hashas veikia
-- Yra deterministiškumas
-- Labai mažai kolizijų
-- Veikia greitai (suhashinti 512 eilutes reikėjo 2ms)
-- Lavinos effektas: Hashai panašūs vidutiniškai 16%
-### Silpnumai:
-- Yra maža tikimybė gauti koliziją (stringai turi skirtis vienu simbolių ant 16 vienetų (pagal ascii lentelę), ir dar turi būti toks random generatoriaus seed'as, kuris nepridės prie to simbolio nieko).
-## Palyginimas su SHA256:
-### Buvo panaudota openssl biblioteka SHA256 funkcijai: <br />
-
+### Pagrindine bloku grandines klase turi tokius private narius:
+- list<Block> blockList - bloku sarasas
+- users - naudotoju hashsetas 
+- memPool - transakciju hashsetas
+- sortedTransactionHashes - surusiuotas transakciju vektorius (surusiotas pagal perduotu bitkoinu kieki)
+- difficulty - kasinimo sunkumas 
+### Privatus metodai: 
+- ExecuteTransactions - tik bloku grandine gali ivykdyti transakcijas
+- GenerateUsers - naudotoju generavimas
+- GenerateMemPool - transakciju generavimas
+### Naudotojo metodai:
+- addTransaction - prideti transakcija (transakcija yra validuojama pries pridedant)
+- addUser - prideti naudotoja
+- validateAndAddBlock - pabandyti prideti savo bloka i bloku grandine (blokas yra validuojamas pries pridedant)
+### Taip pat klase turi konstruktoriu (apie ji zemiau), getterius ir setterius
+### Konstruktorius:
 ```c++
-#include <openssl/evp.h>
-#include <openssl/err.h>
-#include <string>
-#include <sstream>
-#include <iomanip>
-#include <vector>
+Blockchain::Blockchain() : difficulty(3) {
+    // generate users and transactions
+    getLogger().Log("Initializing blockchain...");
+    GenerateUsers();
+    getLogger().Log("Generated " + to_string(this->users.size()) + " users.");
+    GenerateMemPool();
+    getLogger().Log("Generated " + to_string(this->memPool.size()) + " txes and added to mempool.");
 
-std::string sha256(const std::string &input) {
-    // Create context
-    EVP_MD_CTX *ctx = EVP_MD_CTX_new();
-    if (!ctx) {
-        // handle error
-        return "";
-    }
+    //satoshi
+    User Satoshi("Satoshi Nakamoto", "12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX", 0);
+    this->users.insert({Satoshi.getKey(), Satoshi});
 
-    // Initialize digest: SHA-256
-    if (1 != EVP_DigestInit_ex(ctx, EVP_sha256(), NULL)) {
-        // handle error
-        EVP_MD_CTX_free(ctx);
-        return "";
-    }
-
-    // Update with data
-    if (1 != EVP_DigestUpdate(ctx, input.data(), input.size())) {
-        // handle error
-        EVP_MD_CTX_free(ctx);
-        return "";
-    }
-
-    // Finalize digest
-    unsigned char hash[EVP_MAX_MD_SIZE];
-    unsigned int hash_len = 0;
-    if (1 != EVP_DigestFinal_ex(ctx, hash, &hash_len)) {
-        // handle error
-        EVP_MD_CTX_free(ctx);
-        return "";
-    }
-
-    // Clean up
-    EVP_MD_CTX_free(ctx);
-
-    // Convert hash bytes to hexadecimal string
-    std::ostringstream oss;
-    oss << std::hex << std::setfill('0');
-    for (unsigned int i = 0; i < hash_len; ++i) {
-        oss << std::setw(2) << static_cast<int>(hash[i]);
-    }
-    return oss.str();
+    // add genesis block
+    Block genesisBlock(Satoshi);
+    this->ExecuteTransactions(genesisBlock.getTransactions());
+    blockList.push_back(genesisBlock);
 }
 ```
-
-### Su SHA256 buvo atlikti tie pat tyrimai (spartos su konstitucija.txt, kolizijų paieška, lavinos efekto patikrinimas):
-### 1. Sparta: <br />
-<img width="808" height="407" alt="image" src="https://github.com/user-attachments/assets/91b01db4-ea65-463d-8d6d-2579bcf4281b" /> <br />
-<img width="726" height="453" alt="image" src="https://github.com/user-attachments/assets/f8f009d5-f946-448f-bed8-2d9308d7455f" /> <br />
-Matosi, kad SHA256 veikia žymiai greičiau. <br />
-### 2. Kolizijos: <br />
-<img width="834" height="95" alt="image" src="https://github.com/user-attachments/assets/3818f1b9-2eca-43a5-b708-4e56ac754f27" /> <br />
-Kolizijų nėra (kaip ir pas mane) <br />
-### 3. Lavinos efektas: <br />
-<img width="703" height="363" alt="image" src="https://github.com/user-attachments/assets/f62d78e7-1309-48ba-98f7-2919521ba264" /> <br />
-Lavinos efektas geriau matomas SHA256. Hexo lygmeniu : vidutinis panašumas 9% mažiau negu pas mane, maksimalus panašumas: 25% (pas mane 100%). Bito lygmeniu min ir avg reikšmės panašios, skiriasi tik maksimalus panašumas.<br />
-### Išvada:
-SHA256 veikia geriau ir greičiau.
-
-## Palyginimas su AI generuota funkcija:
-### AI sugeneravo tokia funkcija:
-
+- Pasirenka sunkuma (3)
+- Sukuria naudotojus ir transakcijas 
+- Sukuria Satoshi user
+- Sukuria genesis bloka
+- Ivykdo genesis bloko transakcijas (viena transakcija nuo block reward -> satoshi)
+- Ideda genesis bloka i bloku grandine
+## Block klase:
 ```c++
-std::string HashFunctionAI(const std::string &input) {
-    constexpr int HASH_WORDS = 8;      // 8 * 32 = 256 bits
+struct BlockHeader {
+    // calculated by mining
+    string hash;
+    string timestamp;
+    long long int nonce;
+    std::chrono::duration<long, std::ratio<1, 1000>> miningTime;
 
-    uint32_t state[HASH_WORDS] = {
-        0x12345678u, 0x9abcdef0u, 0xdeadbeefu, 0xfeedfaceu,
-        0x0badc0deu, 0xcafebabeu, 0x8badf00du, 0x1337c0deu
+    // calculated after block creation
+    long int height;
+    string prevBlockHash;
+    string version;
+    string merkleRootHash;
+    int difficultyTarget;  
+}
+class Block {
+    private:
+        BlockHeader mHeader;
+        vector<Transaction> mData;
+    public:
+        //default constructor, destructor and rule of five
+        Block() = default;
+        Block(const Block &BlockToCopy) = default;
+        Block& operator=(const Block &BlockToCopy) = default;
+        Block(Block &&BlockToMove) = default;
+        Block& operator=(Block &&BlockToMove) = default;
+        ~Block();
+
+        //genesis block
+        Block(const User &satoshi);
+
+        //new block with 100 random transactions
+        Block(const Blockchain &blockchain, User &miner);
+
+        //getters and setters
+        long long int getNonce() const {return mHeader.nonce;}
+        BlockHeader getHeader() const {return mHeader;}
+        string getHash() const {return mHeader.hash;}
+        long int getHeight() const {return mHeader.height;}
+        const vector<Transaction> &getTransactions() const  {return mData;}
+        void setHeader(BlockHeader header);
+        void setTransactions(vector<Transaction> transactions);
+        auto getMiningTime() const {return mHeader.miningTime;}
+
+        void addTransaction(const Transaction &tx);
+
+        void CoutBlock() const;
+        bool Mine();
+        bool Mine5secs();
+};
+```
+- Blokas sudarytas is headerio ir transakciju vektoriaus
+- Blokas sudaromas per konstruktoriu Block(const Blockchain &blockchain, User &miner), kur i ji dedama 100 vertingiausiu transakciju, ir taip pat kasinimo transakcija (Block Reward -> Miner, 50 btc)
+- Bloka galima kasti
+- Neiskasta bloka nepavyks prideti prie bloku grandines ir gauti reward (50 btc)
+## User klase:
+```c++
+class User {
+    private:
+        string mName;
+        string mPublicKey;
+        int mBalance;
+        int mPendingBalance;
+    public:
+        User() = default;
+        User(const User &other) = default;
+        User& operator=(const User &other) = default;
+        User(const string &name);
+        User(const string &name, const string &key, int balance);
+        ~User();
+
+        string getName() const {return mName; }
+        string getKey() const { return mPublicKey; }
+        int getBalance() const { return mBalance; }
+        int getPendingBalance() const { return mPendingBalance; }
+        void setBalance(int newBalance) { mBalance = newBalance;}
+        void setPendingBalance(int newBalance) {mPendingBalance = newBalance;}
+};
+```
+- Turi varda, viesaji rakta, balansa ir pending balansa
+- Balansas - realus balansas dabar bloku grandineje
+- Pending balansas - balansas, iskaitant transakcijas, kurios buvo pridetos prie mempool'o, bet nebuvo iskastos
+## Bloko kasimas:
+```c++
+bool Block::Mine(){
+    if(!mHeader.hash.empty()) return true;
+    mHeader.nonce = 0;
+    string blockNumber = to_string(this->mHeader.height);
+    getLogger().Log("Starting to mine block #" + blockNumber + "...");
+    auto miningStart = std::chrono::high_resolution_clock::now(); 
+    while (true) {
+        string arg = mHeader.ToString() + std::to_string(mHeader.nonce);
+        string hash = HashFunction(arg);
+        bool mined = true;
+        for (int i = 0; i < mHeader.difficultyTarget; i++) {
+            if (hash[i]!='0') mined = false;
+        }
+        if (mined == true) {
+            mHeader.hash = hash;
+            mHeader.timestamp = GetCurrentTimeStamp();
+            auto miningEnd = std::chrono::high_resolution_clock::now(); 
+            mHeader.miningTime = duration_cast<std::chrono::milliseconds>(miningEnd - miningStart);
+            break;
+        }
+        mHeader.nonce++;
+        if (mHeader.nonce % 1000000 == 0) getLogger().Log("(Block #" + blockNumber + "): " + to_string(mHeader.nonce) + " hashes checked...");
+    }
+    
+    getLogger().Log("Block #" + blockNumber + " mined with nonce: " + to_string(mHeader.nonce) + ", Hash: " + mHeader.hash);
+    return true;
+}
+```
+- Hashuoja bloko headeri ir nonce
+- Kai hashas atitinka kasimo sunkumui (prasideda reikalingu nuliu kiekiu) - baigia kasima
+## Bloko pridejimas ir validavimas:
+```c++
+void Blockchain::validateAndAddBlock(Block &BlockToAdd){
+    string blockHeight = to_string(BlockToAdd.getHeight());
+
+    // check if transactions are in mempool
+    for (auto tx : BlockToAdd.getTransactions()) {
+        if(tx.getSender() == "Block Reward") continue;
+        if (memPool.find(tx.getHash()) == memPool.end()) {
+            getLogger().Log("Block #" + blockHeight + " denied, reason: Txs are not present in mempool");
+            return;
+        }
+    }
+
+    //check merkle root
+    if(BlockToAdd.getHeader().merkleRootHash != MerkleRootHash(BlockToAdd.getTransactions())) {
+        getLogger().Log("Block #" + blockHeight + " denied, reason: MerkleRoot differs");
+        return;
+    }
+
+    // check if the block has correct previous block hash
+    if (BlockToAdd.getHeader().prevBlockHash != this->getLastBlock().getHash()) {
+        getLogger().Log("Block #" + blockHeight + " denied, reason: Previous block hash does not match");
+        return;
+    }
+
+    //check block hash
+    if (BlockToAdd.getHash().empty()) {
+        getLogger().Log("Block #" + blockHeight + " denied, reason: Hash is empty");
+        return;
+    }
+
+    // check if hash is correct (according to proof of work)
+    bool valid = true;
+    for (int i = 0; i < difficulty; i++) {
+        if (BlockToAdd.getHash()[i]!='0') valid = false;
+    }
+    if (!valid) {
+        getLogger().Log("Block #" + blockHeight + " denied, reason: Hash does not match difficulty");
+        return;
+    }
+
+    //check if hash is correct
+    if (BlockToAdd.getHash() != HashFunction(BlockToAdd.getHeader().ToString() + std::to_string(BlockToAdd.getHeader().nonce))) {
+        getLogger().Log("Block #" + blockHeight + " denied, reason: Hash is not correct");
+        return;
     };
 
-    // Mix each character into the state
-    for (size_t i = 0; i < input.size(); i++) {
-        uint32_t c = static_cast<unsigned char>(input[i]);
-        uint32_t pos = i % HASH_WORDS;
 
-        // XOR the character into the state
-        state[pos] ^= c + i;
+    this->ExecuteTransactions(BlockToAdd.getTransactions());
+    blockList.push_back(BlockToAdd);
+    getLogger().Log("Block #" + to_string(BlockToAdd.getHeight()) + " added to blockchain!");
+    getLogger().Log("User \"" + users.at(BlockToAdd.getTransactions().at(0).getReceiver()).getName() +
+    "\" got the reward!");
 
-        // Rotate based on character value
-        state[pos] = rotl(state[pos], (c % 31) + 1);
-
-        // Shift and XOR with neighbor
-        uint32_t neighbor = state[(pos + 1) % HASH_WORDS];
-        state[pos] ^= rotr(neighbor, (i % 29) + 1);
-
-        // Add some constant (helps avalanche)
-        state[pos] += 0x9e3779b9u; // golden ratio
+    if (BlockToAdd.getMiningTime().count() > 10000) {
+        this->difficulty-=1;
+        getLogger().Log("Difficulty decreased by 1");
     }
-
-    // Convert state into hex string
-    std::ostringstream oss;
-    for (int i = 0; i < HASH_WORDS; i++) {
-        oss << std::hex << std::setw(8) << std::setfill('0') << state[i];
+    if (BlockToAdd.getMiningTime().count() < 1000){
+        getLogger().Log("Difficulty increased by 1");
+        this->difficulty+=1;
     }
-
-    return oss.str();
 }
 ```
+- Tikrina ar transakcijos bloke yra mempoole
+- Tikrina visu transakciju merkleroot hash'a
+- Tikrina ankstesnio bloko hasha
+- Tikrina ar egzistuoja sito bloko hashas
+- Tikrina ar atitinka bloko hashas sunkumui
+- Tikrina ar hashas teisingas
+- Tada ivykdo transakcijas, isveda informacija, ir keicia sunkuma (jei reikia)
+## Transakcijos pridejimas prie mempoolo:
+```c++
+bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
 
-### Su AI funkcija buvo atlikti tie pat tyrimai (spartos su konstitucija.txt, kolizijų paieška, lavinos efekto patikrinimas):
-### 1. Sparta: <br />
-<img width="859" height="394" alt="image" src="https://github.com/user-attachments/assets/62c9137a-aaad-43b9-84e0-bd832f0bf453" /> <br />
-<img width="725" height="451" alt="image" src="https://github.com/user-attachments/assets/6aefad7a-7b59-400f-8b6f-a30bfadf58f2" /> <br />
-Matosi, kad AI algoritmas veikia greičiau negu mano, bet lečiau negu SHA256. <br />
-### 2. Kolizijos: <br />
-<img width="856" height="91" alt="image" src="https://github.com/user-attachments/assets/688b5204-44d4-4f3a-9d1e-bf633b3dcbab" /> <br />
-Kolizijų nėra (kaip ir pas mane) <br />
-### 3. Lavinos efektas: <br />
-<img width="711" height="340" alt="image" src="https://github.com/user-attachments/assets/752c9a01-b6ef-45d7-a6be-8d35c59db4f5" /> <br />
-Ai funkcijoje vidutinis panašumas didesnis, ir hexo ir bitų lygmenyje. Bet nėra kolizijų (maksimalus panašumas nepasiekia 100). Tai galima pasakyti AI funkcija daugiau patikima. <br />
+    // check if users exists
+    if (users.find(transactionToAdd.getSender()) == users.end() ||
+        users.find(transactionToAdd.getReceiver()) == users.end()) {
+        getLogger().Log("Tx " + transactionToAdd.getHash() + " denied. Reason: users not found");
+        return false;
+    }
 
-### Išvada:
-AI sugeneravo geresni algoritmą negu mano, bet ne tokį kaip SHA256.
+    if (transactionToAdd.getAmount() <=0) {
+        return false;
+    }
 
+    // check if user has enough to send
+    if(transactionToAdd.getAmount() > users.at(transactionToAdd.getSender()).getPendingBalance()) {
+        getLogger().Log("Tx " + transactionToAdd.getHash() + " denied. Reason: not enough balance");
+        return false;
+    }
 
+    // check hash
+    if (transactionToAdd.getHash()!=
+        HashFunction(transactionToAdd.getTimeStamp() + transactionToAdd.getSender() + transactionToAdd.getReceiver() + std::to_string(transactionToAdd.getAmount()) )) {
+        getLogger().Log("Tx " + transactionToAdd.getHash() + " denied. Reason: hashes doesnt match");
+        return false;
+    }
 
+    //insert
+    memPool.insert({transactionToAdd.getHash(), transactionToAdd});
+    users.at(transactionToAdd.getSender()).setPendingBalance(users.at(transactionToAdd.getSender()).getPendingBalance() - transactionToAdd.getAmount());
+    users.at(transactionToAdd.getReceiver()).setPendingBalance(users.at(transactionToAdd.getReceiver()).getPendingBalance() + transactionToAdd.getAmount());
+    // insert into sorted vector
+    auto amountToInsert = transactionToAdd.getAmount();
+    auto pos = std::lower_bound(
+        sortedTransactionHashes.begin(),
+        sortedTransactionHashes.end(),
+        amountToInsert,
+        [this](const string& existingHash, int amount) -> bool{
+        return memPool.at(existingHash).getAmount() < amount;
+    });
+    sortedTransactionHashes.insert(pos, transactionToAdd.getHash());
 
+    getLogger().Log("Tx " + transactionToAdd.getHash() + " successfully added to mempool.");
+    return true;
+}
+```
+- Tikrina ar egzistuoja naudotojai
+- Tikrina perduotu bitkoinu kieki
+- Tikrina siuntejo balansa
+- Tikrina transakcijos hasha
+- Tada ideda transakcija i hashseta ir vektoriu
+- Keicia naudotoju pending balansus (laikini balansai)
+## MerkleRootHash:
+```c++
+string MerkleRootHash(const vector<Transaction> &transactions) {
+    // return empty if no transactions
+    if (transactions.size() == 0) return "";
 
+    //put transaction hashes into vector
+    vector<string> hashes;
+    hashes.reserve(transactions.size());
+    for (const auto &transaction : transactions) {
+        hashes.push_back(transaction.getHash());
+    }
+    
+    while (hashes.size() > 1) {
+        if (hashes.size() % 2 != 0) hashes.push_back(hashes.back());
+        vector<string> newHashes;
+        newHashes.reserve((hashes.size()+1)/2);
+        for (size_t i = 0; i < hashes.size() - 1; i+=2) {
+            string newHash = HashFunction(hashes.at(i) + hashes.at(i+1));
+            newHashes.push_back(newHash);
+        }
+        hashes = newHashes;
+    }
+    return hashes.at(0);
+}
+```
+- Hashuoja transakciju hashu masyva poromis ir ideda i nauja transakciju masyva
+- Keicia sena masyva i nauja
+- Kartoja kol masyve yra daugiau nei 1 transakcija
+- Jeigu transakciju kiekis yra nelyginis, paskutine transakcija yra hashuojama poroje su juos kopija
+## Lygiagretus kasimas (realizuotas naudojant OpenMP):
+```c++
+void Case2(Blockchain &Btc) {
+    int counter = 0;
+    vector<User> miners;
+    for (auto user : Btc.getUsers()) {
+        miners.push_back(user.second);
+        getLogger().Log(user.second);
+        counter++;
+        if (counter == 5 ) break;
+    }
 
-
+#pragma omp parallel for
+    for (int i = 0; i < 5; i++) {
+        Block block(Btc, miners.at(i));
+        block.Mine5secs();
+        getLogger().Log(block);
+        Btc.validateAndAddBlock(block);
+    }
+}
+```
+- Imami 5 miner'iai
+- Jie kartu sukuria blokus ir minina po 5 sekundes ir po to bando prijungti prie bloku grandines
+- Jei blokai neiskasti - jiems neleis prijungti juos
+- Jei kazkas iskase bloka ir pridejo - kiti gali irgi ji iskasti, bet prideti ir gauti rewarda negales (nes ju blokas nepraeis validavimo)
+## AI
+### AI pagalba buvo naudota tokiems zingzniams:
+- Architekturos klausimams (kas sukuria blokus, kas validuoja, kaip transakcijos validuojamos, kaip apsisaugoti nuo double spending attack)
+- Viesu raktu generavimo funkcijai
+- Hash funkcijos pagerinimas kasimui
+- Pagalbai su std::chrono biblioteka
+- OpenMp instaliavimui
+- Protected reference getteriu sukurimui
