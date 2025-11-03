@@ -14,7 +14,7 @@ string HashFunctionAI(const string &input);
 string HashFunction(const string &input);
 string MerkleRootHash(const vector<Transaction> &transactions);
 
-//Genesis block 
+//Genesis block
 Block::Block(const User &Satoshi){
     string nullHash = "";
     for (int i = 0 ; i < 64; i++) {
@@ -47,7 +47,7 @@ Block::Block(const Blockchain &blockchain, User &miner){
     mHeader.version = "1";
     mHeader.difficultyTarget = blockchain.getDifficulty();
     mHeader.height = blockchain.getLastBlock().getHeight() + 1;
-
+    mHeader.nonce = 0;
     Transaction Reward("Block Reward", miner.getKey(), 50);
     mData.push_back(Reward);
 
@@ -69,10 +69,9 @@ Block::Block(const Blockchain &blockchain, User &miner){
 
 bool Block::Mine(){
     if(!mHeader.hash.empty()) return true;
-    mHeader.nonce = 0;
     string blockNumber = to_string(this->mHeader.height);
     getLogger().Log("Starting to mine block #" + blockNumber + "...");
-    auto miningStart = std::chrono::high_resolution_clock::now(); 
+    auto miningStart = std::chrono::high_resolution_clock::now();
     while (true) {
         string arg = mHeader.ToString() + std::to_string(mHeader.nonce);
         string hash = HashFunction(arg);
@@ -83,21 +82,20 @@ bool Block::Mine(){
         if (mined == true) {
             mHeader.hash = hash;
             mHeader.timestamp = GetCurrentTimeStamp();
-            auto miningEnd = std::chrono::high_resolution_clock::now(); 
+            auto miningEnd = std::chrono::high_resolution_clock::now();
             mHeader.miningTime = duration_cast<std::chrono::milliseconds>(miningEnd - miningStart);
             break;
         }
         mHeader.nonce++;
         if (mHeader.nonce % 1000000 == 0) getLogger().Log("(Block #" + blockNumber + "): " + to_string(mHeader.nonce) + " hashes checked...");
     }
-    
+
     getLogger().Log("Block #" + blockNumber + " mined with nonce: " + to_string(mHeader.nonce) + ", Hash: " + mHeader.hash);
     return true;
 }
 
 bool Block::Mine5secs(){
     if(!mHeader.hash.empty()) return true;
-    mHeader.nonce = 0;
     string blockNumber = to_string(this->mHeader.height);
     getLogger().Log("Starting to mine block #" + blockNumber + "...");
     auto miningStart = std::chrono::high_resolution_clock::now();
@@ -112,7 +110,7 @@ bool Block::Mine5secs(){
         if (mined == true) {
             mHeader.hash = hash;
             mHeader.timestamp = GetCurrentTimeStamp();
-            auto miningEnd = std::chrono::high_resolution_clock::now(); 
+            auto miningEnd = std::chrono::high_resolution_clock::now();
             mHeader.miningTime = duration_cast<std::chrono::milliseconds>(miningEnd - miningStart);
             break;
         }

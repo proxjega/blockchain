@@ -23,31 +23,30 @@ class Blockchain {
         unordered_map<string, User> users;
         unordered_map<string, Transaction> memPool;
         vector<string> sortedTransactionHashes;
-        
+
         int difficulty;
         // private methods (are called only by blockchain itself)
         void ExecuteTransactions(const vector<Transaction> &transactions); //TODO
         void GenerateUsers();
         void GenerateMemPool();
     public:
-        //constructors
+        // constructors
         Blockchain();
         ~Blockchain();
 
-        //getters and setters
+        // getters and setters
         const Block& getLastBlock() const { return blockList.back();}
         Block getBlock(int n) const;
-
         int getDifficulty() const {return difficulty; }
-        
-        // protected getters 
+
+        // protected getters
         const list<Block>& getBlockChain() const {return blockList;}
         const unordered_map<string, Transaction>& getMemPool() const {return memPool;}
         const vector<string>& getSortedHashVector() const {return sortedTransactionHashes;}
         const unordered_map<string, User>& getUsers() const {return users;}
 
+        // user methods
         bool addTransactionToMempool(const Transaction &transactionToAdd);
         void addUser(const User& user);
-
         void validateAndAddBlock(Block &BlockToAdd); // TODO
 };
