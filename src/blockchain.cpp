@@ -125,10 +125,19 @@ void Blockchain::validateAndAddBlock(Block &BlockToAdd){
         return;
     };
 
+
     this->ExecuteTransactions(BlockToAdd.getTransactions());
     blockList.push_back(BlockToAdd);
     getLogger().Log("Block #" + to_string(BlockToAdd.getHeight()) + " added to blockchain!");
     
+    if (BlockToAdd.getMiningTime().count() > 10000) {
+        this->difficulty-=1;
+        getLogger().Log("Difficulty decreased by 1");
+    }
+    if (BlockToAdd.getMiningTime().count() < 1000){
+        getLogger().Log("Difficulty increased by 1");
+        this->difficulty+=1;
+    } 
 }
 
 void Blockchain::ExecuteTransactions(const vector<Transaction> &transactions){

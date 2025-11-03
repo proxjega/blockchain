@@ -20,6 +20,7 @@ struct BlockHeader {
     string hash;
     string timestamp;
     long long int nonce;
+    std::chrono::duration<long, std::ratio<1, 1000>> miningTime;
 
     // calculated after block creation
     long int height;
@@ -60,6 +61,7 @@ class Block {
         const vector<Transaction> &getTransactions() const  {return mData;}
         void setHeader(BlockHeader header);
         void setTransactions(vector<Transaction> transactions);
+        auto getMiningTime() const {return mHeader.miningTime;}
 
         void addTransaction(const Transaction &tx);
 

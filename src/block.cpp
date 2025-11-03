@@ -72,6 +72,7 @@ bool Block::Mine(){
     mHeader.nonce = 0;
     string blockNumber = to_string(this->mHeader.height);
     getLogger().Log("Starting to mine block #" + blockNumber + "...");
+    auto miningStart = std::chrono::high_resolution_clock::now(); 
     while (true) {
         string arg = mHeader.ToString() + std::to_string(mHeader.nonce);
         string hash = HashFunction(arg);
@@ -82,11 +83,14 @@ bool Block::Mine(){
         if (mined == true) {
             mHeader.hash = hash;
             mHeader.timestamp = GetCurrentTimeStamp();
+            auto miningEnd = std::chrono::high_resolution_clock::now(); 
+            mHeader.miningTime = duration_cast<std::chrono::milliseconds>(miningEnd - miningStart);
             break;
         }
         mHeader.nonce++;
         if (mHeader.nonce % 1000000 == 0) getLogger().Log("(Block #" + blockNumber + "): " + to_string(mHeader.nonce) + " hashes checked...");
     }
+    
     getLogger().Log("Block #" + blockNumber + " mined with nonce: " + to_string(mHeader.nonce) + ", Hash: " + mHeader.hash);
     return true;
 }
@@ -96,21 +100,27 @@ bool Block::Mine5secs(){
     mHeader.nonce = 0;
     string blockNumber = to_string(this->mHeader.height);
     getLogger().Log("Starting to mine block #" + blockNumber + "...");
-    auto start = std::chrono::high_resolution_clock::now();
+    auto miningStart = std::chrono::high_resolution_clock::now();
     auto end = std::chrono::high_resolution_clock::now();
     while (true) {
         string arg = mHeader.ToString() + std::to_string(mHeader.nonce);
         string hash = HashFunction(arg);
-        if (hash[0] == '0' && hash[1] == '0' && hash[2] == '0') {
+        bool mined = true;
+        for (int i = 0; i < mHeader.difficultyTarget; i++) {
+            if (hash[i]!='0') mined = false;
+        }
+        if (mined == true) {
             mHeader.hash = hash;
             mHeader.timestamp = GetCurrentTimeStamp();
+            auto miningEnd = std::chrono::high_resolution_clock::now(); 
+            mHeader.miningTime = duration_cast<std::chrono::milliseconds>(miningEnd - miningStart);
             break;
         }
         mHeader.nonce++;
         if (mHeader.nonce % 1000000 == 0) {
             getLogger().Log("(Block #" + blockNumber + "): " + to_string(mHeader.nonce) + " hashes checked...");
             end = std::chrono::high_resolution_clock::now();
-            auto seconds = duration_cast<std::chrono::seconds>(end - start);
+            auto seconds = duration_cast<std::chrono::seconds>(end - miningStart);
             if (seconds.count() > 5) {
                 getLogger().Log("Stopping mining after 5 seconds.");
                 return false;

@@ -34,7 +34,7 @@ string HashFunction(const string &input){
     // cout << "USN: " << uniqueStringNumber << endl;
     mt19937 engine(uniqueStringNumber+3);
     uniform_int_distribution<int> indexDistribution(0, HASH_LENGTH - 1);
-    std::discrete_distribution<int> randomDistribution({2, 1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1, 1, 1, 1, 1});
+    std::discrete_distribution<int> randomDistribution({3, 1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1, 1, 1, 1, 1});
     int hash[HASH_LENGTH];
     for (int i = 0; i < HASH_LENGTH; i++) {
         hash[i]=0;
