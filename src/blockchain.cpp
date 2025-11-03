@@ -24,6 +24,7 @@ Blockchain::Blockchain() {
     GenerateMemPool();
     getLogger().Log("Generated " + to_string(this->memPool.size()) + " txes and added to mempool.");
 
+    difficulty = 3;
     //satoshi
     User Satoshi("Satoshi Nakamoto", "12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX", 0);
     this->users.insert({Satoshi.getKey(), Satoshi});
@@ -107,11 +108,17 @@ void Blockchain::validateAndAddBlock(Block &BlockToAdd){
         getLogger().Log("Block #" + blockHeight + " denied, reason: Hash is empty");
         return;
     }
+    
     // check if hash is correct (according to proof of work)
-    if (BlockToAdd.getHash()[0] != '0' || BlockToAdd.getHash()[1] != '0' || BlockToAdd.getHash()[2] != '0') {
+    bool valid = true;
+    for (int i = 0; i < difficulty; i++) {
+        if (BlockToAdd.getHash()[i]!='0') valid = false;
+    }
+    if (!valid) {
         getLogger().Log("Block #" + blockHeight + " denied, reason: Hash does not match difficulty");
         return;
     }
+
     //check if hash is correct
     if (BlockToAdd.getHash() != HashFunction(BlockToAdd.getHeader().ToString() + std::to_string(BlockToAdd.getHeader().nonce))) {
         getLogger().Log("Block #" + blockHeight + " denied, reason: Hash is not correct");

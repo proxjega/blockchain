@@ -45,7 +45,7 @@ Block::Block(const Blockchain &blockchain, User &miner){
     mHeader.hash.clear();
     mHeader.prevBlockHash = blockchain.getLastBlock().getHash();
     mHeader.version = "1";
-    mHeader.difficultyTarget = 3;
+    mHeader.difficultyTarget = blockchain.getDifficulty();
     mHeader.height = blockchain.getLastBlock().getHeight() + 1;
 
     Transaction Reward("Block Reward", miner.getKey(), 50);
@@ -75,7 +75,11 @@ bool Block::Mine(){
     while (true) {
         string arg = mHeader.ToString() + std::to_string(mHeader.nonce);
         string hash = HashFunction(arg);
-        if (hash[0] == '0' && hash[1] == '0' && hash[2] == '0') {
+        bool mined = true;
+        for (int i = 0; i < mHeader.difficultyTarget; i++) {
+            if (hash[i]!='0') mined = false;
+        }
+        if (mined == true) {
             mHeader.hash = hash;
             mHeader.timestamp = GetCurrentTimeStamp();
             break;
