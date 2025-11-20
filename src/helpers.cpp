@@ -201,27 +201,66 @@ string GetCurrentTimeStamp(){
     return time;
 }
 
-string MerkleRootHash(const vector<Transaction> &transactions) {
-    // return empty if no transactions
-    if (transactions.size() == 0) return "";
+#include <bitcoin/system.hpp>
+// Merkle Root Hash
+string MerkleRootHash(const vector<Transaction> &transactions)
+{
+    bc::hash_list merkle;
+     for (const auto& tx : transactions) {
+        // Decode the hex string into a data_chunk
+        bc::data_chunk decoded_data;
+        bc::decode_base16(decoded_data, tx.getHash());
 
-    //put transaction hashes into vector
-    vector<string> hashes;
-    hashes.reserve(transactions.size());
-    for (const auto &transaction : transactions) {
-        hashes.push_back(transaction.getHash());
-    }
-    
-    while (hashes.size() > 1) {
-        if (hashes.size() % 2 != 0) hashes.push_back(hashes.back());
-        vector<string> newHashes;
-        newHashes.reserve((hashes.size()+1)/2);
-        for (size_t i = 0; i < hashes.size() - 1; i+=2) {
-            string newHash = HashFunction(hashes.at(i) + hashes.at(i+1));
-            newHashes.push_back(newHash);
+        // Ensure the decoded data is the correct size (32 bytes for a hash)
+        if (decoded_data.size() == bc::hash_size) {
+            // Create a hash_digest from the decoded data and add it to the hash list
+            bc::hash_digest hash;
+            std::copy(decoded_data.begin(), decoded_data.end(), hash.begin());
+            merkle.push_back(hash);
+        } else {
+            // Handle the case where the string is not a valid hash
+            std::cerr << "Invalid hash string: " << tx.getHash() << std::endl;
         }
-        hashes = newHashes;
     }
-    return hashes.at(0);
-}   
+    // Stop if hash list is empty or contains one element
+    if (merkle.empty())
+    return bc::encode_base16(bc::null_hash); 
+    else if (merkle.size() == 1)
+    return bc::encode_base16(merkle[0]);
+    // While there is more than 1 hash in the list, keep looping...
+    while (merkle.size() > 1)
+    {
+        // If number of hashes is odd, duplicate last hash in the list.
+        if (merkle.size() % 2 != 0)
+        merkle.push_back(merkle.back());
+        // List size is now even.
+        assert(merkle.size() % 2 == 0);
+        // New hash list.
+        bc::hash_list new_merkle;
+        // Loop through hashes 2 at a time.
+        for (auto it = merkle.begin(); it != merkle.end(); it += 2)
+        {
+            // Join both current hashes together (concatenate).
+            bc::data_chunk concat_data(bc::hash_size * 2);
+            auto concat = bc::serializer<
+            decltype(concat_data.begin())>(concat_data.begin());
+            concat.write_hash(*it);
+            concat.write_hash(*(it + 1));
+            // Hash both of the hashes.
+            bc::hash_digest new_root = bc::bitcoin_hash(concat_data);
+            // Add this to the new list.
+            new_merkle.push_back(new_root);
+        }
+        // This is the new list.
+        merkle = new_merkle;
+        // DEBUG output -------------------------------------
+        // std::cout << "Current merkle hash list:" << std::endl;
+        // for (const auto& hash: merkle)
+        // std::cout << " " << bc::encode_base16(hash) << std::endl;
+        // std::cout << std::endl;
+        // --------------------------------------------------
+    }
+    // Finally we end up with a single item.
+    return bc::encode_base16(merkle[0]);
+}
 
