@@ -1,5 +1,9 @@
 # Bloku grandine
-Cia yra mano bloku grandine. 
+## v1.2 Pakeitimai:
+- Pakeista funkcija MerkleRootHash:
+Dabar ji naudoja merkle root implementacija is libbitcoin
+
+## Cia yra mano bloku grandine. 
 - Realizuota naudojant account model
 - Yra transakciju ir bloku pridejimo validavimas
 - Bloku kasimo sunkumas keiciasi priklausomai nuo kasimo laiko
