@@ -1,10 +1,11 @@
 # My blockchain from scratch
-This is my blockchain, written in C++. 
-- Using account model for users balances
-- Has transaction validation
-- Has new block adding validation
-- Block mining difficulty depends on mining time
-- For every mined block miner gets 50 BTC reward
+## Project overview
+
+This project is a simplified blockchain implementation written in C++. It simulates the core mechanisms used in real blockchain systems: transaction validation, block creation, mining using a proof-of-work algorithm, and block verification before inclusion in the chain.
+
+The blockchain uses an account-based balance model, maintains a mempool of pending transactions, and allows miners to create blocks containing the most valuable transactions. Blocks are mined by searching for a hash that satisfies the current difficulty target. The difficulty automatically adjusts based on the time required to mine previous blocks.
+
+The implementation also includes Merkle tree construction for transaction integrity, transaction validation to prevent invalid transfers, and parallel block mining using OpenMP, where multiple miners compete to mine and append a block. A successful miner receives a 50 BTC block reward.
 ### Blockchain is made by using several classes:
 ## Blockchain class:
 ```c++
