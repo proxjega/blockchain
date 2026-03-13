@@ -1056,7 +1056,6 @@ dkms.conf
 /build/
 /bin/
 /obj/
-*.
 /main
 konstitucija.txt
 test.txt
@@ -1069,3 +1068,5 @@ rodmap.txt
 .clang-tidy
 .gitignore
 .editorconfig
+blockchain
+!Makefile

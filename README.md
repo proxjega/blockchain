@@ -6,8 +6,47 @@ This project is a simplified blockchain implementation written in C++. It simula
 The blockchain uses an account-based balance model, maintains a mempool of pending transactions, and allows miners to create blocks containing the most valuable transactions. Blocks are mined by searching for a hash that satisfies the current difficulty target. The difficulty automatically adjusts based on the time required to mine previous blocks.
 
 The implementation also includes Merkle tree construction for transaction integrity, transaction validation to prevent invalid transfers, and parallel block mining using OpenMP, where multiple miners compete to mine and append a block. A successful miner receives a 50 BTC block reward.
-### Blockchain is made by using several classes:
-## Blockchain class:
+
+## Build and run
+
+### Dependencies
+This project uses:
+- C++20 compiler (g++ 11+ or clang++ 14+)
+- GNU Make
+- OpenMP runtime and headers
+- OpenSSL development libraries (for SHA-256 via EVP)
+
+Linux (Debian/Ubuntu) example:
+```bash
+sudo apt update
+sudo apt install -y build-essential libssl-dev libomp-dev
+```
+
+### Compile
+From the project root:
+```bash
+make
+```
+
+This builds the executable:
+- `./blockchain`
+
+### Run
+```bash
+./blockchain
+```
+
+Or use the Makefile convenience target:
+```bash
+make run
+```
+
+### Clean build artifacts
+```bash
+make clean
+```
+## Implementation details:
+### Blockchain class:
 ```c++
 class Blockchain {
     private:
@@ -43,24 +82,24 @@ class Blockchain {
         void validateAndAddBlock(Block &BlockToAdd);
 };
 ```
-### The main blockchain class has the following private members:
+#### The main blockchain class has the following private members:
 - list<Block> blockList – list of blocks  
 - users – user hash set  
 - memPool – transaction hash set  
 - sortedTransactionHashes – sorted transaction vector (sorted by the amount of transferred bitcoins)  
 - difficulty – mining difficulty  
 
-### Private methods:
+#### Private methods:
 - ExecuteTransactions – only the blockchain can execute transactions  
 - GenerateUsers – user generation  
 - GenerateMemPool – transaction generation  
 
-### User methods:
+#### User methods:
 - addTransaction – add a transaction (the transaction is validated before being added)  
 - addUser – add a user  
 - validateAndAddBlock – attempt to add a block to the blockchain (the block is validated before being added)  
 
-### The class also has a constructor (described below), getters, and setters  
+#### The class also has a constructor (described below), getters, and setters  
 
 ### Constructor:
 ```c++
@@ -89,7 +128,7 @@ Blockchain::Blockchain() : difficulty(3) {
 - Executes the genesis block transactions (one transaction from block reward -> Satoshi)  
 - Adds the genesis block to the blockchain  
 
-## Block class:
+### Block class:
 ```c++
 struct BlockHeader {
     // calculated by mining
@@ -146,7 +185,7 @@ class Block {
 - The block can be mined  
 - An unmined block cannot be added to the blockchain and cannot receive the reward (50 BTC)  
 
-## User class:
+### User class:
 ```c++
 class User {
     private:
@@ -173,7 +212,7 @@ class User {
 - Contains name, public key, balance, and pending balance  
 - Balance – the real balance currently in the blockchain  
 - Pending balance – balance including transactions that were added to the mempool but have not yet been mined  
-## Block mining:
+### Block mining:
 ```c++
 bool Block::Mine(){
     if(!mHeader.hash.empty()) return true;
@@ -205,7 +244,7 @@ bool Block::Mine(){
 ```
 - Hashes the block header and nonce  
 - When the hash satisfies the mining difficulty (starts with the required number of zeros), mining finishes  
-## Block addition and validation:
+### Block addition and validation:
 ```c++
 void Blockchain::validateAndAddBlock(Block &BlockToAdd){
     string blockHeight = to_string(BlockToAdd.getHeight());
@@ -277,7 +316,7 @@ void Blockchain::validateAndAddBlock(Block &BlockToAdd){
 - Checks whether the block hash satisfies the difficulty  
 - Checks whether the hash is correct  
 - Then executes transactions, outputs information, and adjusts difficulty (if needed)  
-## Adding a transaction to the mempool:
+### Adding a transaction to the mempool:
 ```c++
 bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
 
@@ -330,7 +369,7 @@ bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
 - Checks the transaction hash  
 - Then inserts the transaction into the hash set and vector  
 - Updates users’ pending balances (temporary balances)  
-## MerkleRootHash:
+### MerkleRootHash:
 ```c++
 string MerkleRootHash(const vector<Transaction> &transactions) {
     // return empty if no transactions
@@ -360,7 +399,7 @@ string MerkleRootHash(const vector<Transaction> &transactions) {
 - Replaces the old array with the new one  
 - Repeats until the array contains only one transaction  
 - If the number of transactions is odd, the last transaction is hashed together with its copy  
-## Parallel mining (implemented using OpenMP):
+### Parallel mining (implemented using OpenMP):
 ```c++
 void Case2(Blockchain &Btc) {
     int counter = 0;
