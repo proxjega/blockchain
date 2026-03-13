@@ -5,7 +5,7 @@ This project is a simplified blockchain implementation written in C++. It simula
 
 The blockchain uses an account-based balance model, maintains a mempool of pending transactions, and allows miners to create blocks containing the most valuable transactions. Blocks are mined by searching for a hash that satisfies the current difficulty target. The difficulty automatically adjusts based on the time required to mine previous blocks.
 
-The implementation also includes Merkle tree construction for transaction integrity, transaction validation to prevent invalid transfers, and parallel block mining using OpenMP, where multiple miners compete to mine and append a block. A successful miner receives a 50 BTC block reward.
+The implementation also includes Merkle tree construction for transaction integrity, transaction validation to prevent invalid transfers, and parallel block mining using OpenMP, where multiple miners compete to mine and append a block. A successful miner receives a 50 BTC block reward. In addition it has logger, that logs everything to stdout and log/blockchainLog.log file.
 
 ## Build and run
 
@@ -45,6 +45,35 @@ make run
 ```bash
 make clean
 ```
+
+## Functionality:
+
+### After running program it:
+- Initializes the blockchain
+- Creates 1000 random users with random balances
+- Creates 10000 random transactions
+- Creates and outputs genesis block
+- Prompts user to create his account
+- Logs everything to stdout and log/blockchainLog.log
+<img width="701" height="304" alt="image" src="https://github.com/user-attachments/assets/22ef73ee-52d7-40b9-8649-1d9befd414e1" />
+
+
+## Interactive menu
+
+After launching, you are prompted to create a user (enter any name). You then interact with the blockchain via a numbered menu:
+
+| Option | Description |
+|--------|-------------|
+| `1` | Mine 1 block as **your user**. Constructs a block with the 100 most valuable mempool transactions, mines it (proof-of-work), and attempts to add it to the chain. Your user receives the 50 BTC block reward on success. |
+| `2` | Take 5 randomly generated users and make them mine 5 blocks **in parallel** (OpenMP), each with a 5-second time limit. The first valid mined block that passes chain validation gets appended; the rest are discarded. |
+| `3` | Print a summary of any block by its height (block number). Shows hash, nonce, previous hash, timestamp, version, Merkle root, difficulty, and transaction count. |
+| `4` | Same as `3` but **verbose** — additionally prints every individual transaction inside the block. |
+| `5` | Show mempool stats: total number of pending transactions, the most valuable one, and the least valuable one. |
+| `6` | Show your user's info: name, public key, confirmed balance, and pending balance. |
+| `7` | Look up any user by their public key and display their info. |
+| `8` | Send BTC from your user to another address. Enter the recipient's public key and the amount; the transaction is validated and added to the mempool if your balance is sufficient. |
+
+
 ## Implementation details:
 ### Blockchain class:
 ```c++
