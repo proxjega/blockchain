@@ -1,11 +1,52 @@
-# Bloku grandine
-Cia yra mano bloku grandine. 
-- Realizuota naudojant account model
-- Yra transakciju ir bloku pridejimo validavimas
-- Bloku kasimo sunkumas keiciasi priklausomai nuo kasimo laiko
-- Uz bloku kasima yra atlygis (50 btc) 
-### Bloku grandine realizuote per kelias klases:
-## Blockchain klase:
+# My blockchain from scratch
+## Project overview
+
+This project is a simplified blockchain implementation written in C++. It simulates the core mechanisms used in real blockchain systems: transaction validation, block creation, mining using a proof-of-work algorithm, and block verification before inclusion in the chain.
+
+The blockchain uses an account-based balance model, maintains a mempool of pending transactions, and allows miners to create blocks containing the most valuable transactions. Blocks are mined by searching for a hash that satisfies the current difficulty target. The difficulty automatically adjusts based on the time required to mine previous blocks.
+
+The implementation also includes Merkle tree construction for transaction integrity, transaction validation to prevent invalid transfers, and parallel block mining using OpenMP, where multiple miners compete to mine and append a block. A successful miner receives a 50 BTC block reward.
+
+## Build and run
+
+### Dependencies
+This project uses:
+- C++20 compiler (g++ 11+ or clang++ 14+)
+- GNU Make
+- OpenMP runtime and headers
+- OpenSSL development libraries (for SHA-256 via EVP)
+
+Linux (Debian/Ubuntu) example:
+```bash
+sudo apt update
+sudo apt install -y build-essential libssl-dev libomp-dev
+```
+
+### Compile
+From the project root:
+```bash
+make
+```
+
+This builds the executable:
+- `./blockchain`
+
+### Run
+```bash
+./blockchain
+```
+
+Or use the Makefile convenience target:
+```bash
+make run
+```
+
+### Clean build artifacts
+```bash
+make clean
+```
+## Implementation details:
+### Blockchain class:
 ```c++
 class Blockchain {
     private:
@@ -16,7 +57,7 @@ class Blockchain {
 
         int difficulty;
         // private methods (are called only by blockchain itself)
-        void ExecuteTransactions(const vector<Transaction> &transactions); //TODO
+        void ExecuteTransactions(const vector<Transaction> &transactions);
         void GenerateUsers();
         void GenerateMemPool();
     public:
@@ -38,25 +79,29 @@ class Blockchain {
         // user methods
         bool addTransactionToMempool(const Transaction &transactionToAdd);
         void addUser(const User& user);
-        void validateAndAddBlock(Block &BlockToAdd); // TODO
+        void validateAndAddBlock(Block &BlockToAdd);
 };
 ```
-### Pagrindine bloku grandines klase turi tokius private narius:
-- list<Block> blockList - bloku sarasas
-- users - naudotoju hashsetas 
-- memPool - transakciju hashsetas
-- sortedTransactionHashes - surusiuotas transakciju vektorius (surusiotas pagal perduotu bitkoinu kieki)
-- difficulty - kasinimo sunkumas 
-### Privatus metodai: 
-- ExecuteTransactions - tik bloku grandine gali ivykdyti transakcijas
-- GenerateUsers - naudotoju generavimas
-- GenerateMemPool - transakciju generavimas
-### Naudotojo metodai:
-- addTransaction - prideti transakcija (transakcija yra validuojama pries pridedant)
-- addUser - prideti naudotoja
-- validateAndAddBlock - pabandyti prideti savo bloka i bloku grandine (blokas yra validuojamas pries pridedant)
-### Taip pat klase turi konstruktoriu (apie ji zemiau), getterius ir setterius
-### Konstruktorius:
+#### The main blockchain class has the following private members:
+- list<Block> blockList – list of blocks  
+- users – user hash set  
+- memPool – transaction hash set  
+- sortedTransactionHashes – sorted transaction vector (sorted by the amount of transferred bitcoins)  
+- difficulty – mining difficulty  
+
+#### Private methods:
+- ExecuteTransactions – only the blockchain can execute transactions  
+- GenerateUsers – user generation  
+- GenerateMemPool – transaction generation  
+
+#### User methods:
+- addTransaction – add a transaction (the transaction is validated before being added)  
+- addUser – add a user  
+- validateAndAddBlock – attempt to add a block to the blockchain (the block is validated before being added)  
+
+#### The class also has a constructor (described below), getters, and setters  
+
+### Constructor:
 ```c++
 Blockchain::Blockchain() : difficulty(3) {
     // generate users and transactions
@@ -76,13 +121,14 @@ Blockchain::Blockchain() : difficulty(3) {
     blockList.push_back(genesisBlock);
 }
 ```
-- Pasirenka sunkuma (3)
-- Sukuria naudotojus ir transakcijas 
-- Sukuria Satoshi user
-- Sukuria genesis bloka
-- Ivykdo genesis bloko transakcijas (viena transakcija nuo block reward -> satoshi)
-- Ideda genesis bloka i bloku grandine
-## Block klase:
+- Selects difficulty (3 by default)  
+- Creates users and transactions  
+- Creates the Satoshi user  
+- Creates the genesis block  
+- Executes the genesis block transactions (one transaction from block reward -> Satoshi)  
+- Adds the genesis block to the blockchain  
+
+### Block class:
 ```c++
 struct BlockHeader {
     // calculated by mining
@@ -134,11 +180,12 @@ class Block {
         bool Mine5secs();
 };
 ```
-- Blokas sudarytas is headerio ir transakciju vektoriaus
-- Blokas sudaromas per konstruktoriu Block(const Blockchain &blockchain, User &miner), kur i ji dedama 100 vertingiausiu transakciju, ir taip pat kasinimo transakcija (Block Reward -> Miner, 50 btc)
-- Bloka galima kasti
-- Neiskasta bloka nepavyks prideti prie bloku grandines ir gauti reward (50 btc)
-## User klase:
+- A block consists of a header and a vector of transactions  
+- A block is created through the constructor `Block(const Blockchain &blockchain, User &miner)`, where the 100 most valuable transactions are added, along with a mining transaction (Block Reward -> Miner, 50 BTC)  
+- The block can be mined  
+- An unmined block cannot be added to the blockchain and cannot receive the reward (50 BTC)  
+
+### User class:
 ```c++
 class User {
     private:
@@ -162,10 +209,10 @@ class User {
         void setPendingBalance(int newBalance) {mPendingBalance = newBalance;}
 };
 ```
-- Turi varda, viesaji rakta, balansa ir pending balansa
-- Balansas - realus balansas dabar bloku grandineje
-- Pending balansas - balansas, iskaitant transakcijas, kurios buvo pridetos prie mempool'o, bet nebuvo iskastos
-## Bloko kasimas:
+- Contains name, public key, balance, and pending balance  
+- Balance – the real balance currently in the blockchain  
+- Pending balance – balance including transactions that were added to the mempool but have not yet been mined  
+### Block mining:
 ```c++
 bool Block::Mine(){
     if(!mHeader.hash.empty()) return true;
@@ -195,9 +242,9 @@ bool Block::Mine(){
     return true;
 }
 ```
-- Hashuoja bloko headeri ir nonce
-- Kai hashas atitinka kasimo sunkumui (prasideda reikalingu nuliu kiekiu) - baigia kasima
-## Bloko pridejimas ir validavimas:
+- Hashes the block header and nonce  
+- When the hash satisfies the mining difficulty (starts with the required number of zeros), mining finishes  
+### Block addition and validation:
 ```c++
 void Blockchain::validateAndAddBlock(Block &BlockToAdd){
     string blockHeight = to_string(BlockToAdd.getHeight());
@@ -262,14 +309,14 @@ void Blockchain::validateAndAddBlock(Block &BlockToAdd){
     }
 }
 ```
-- Tikrina ar transakcijos bloke yra mempoole
-- Tikrina visu transakciju merkleroot hash'a
-- Tikrina ankstesnio bloko hasha
-- Tikrina ar egzistuoja sito bloko hashas
-- Tikrina ar atitinka bloko hashas sunkumui
-- Tikrina ar hashas teisingas
-- Tada ivykdo transakcijas, isveda informacija, ir keicia sunkuma (jei reikia)
-## Transakcijos pridejimas prie mempoolo:
+- Checks whether the block’s transactions exist in the mempool  
+- Checks the Merkle root hash of all transactions  
+- Checks the previous block hash  
+- Checks whether the block hash exists  
+- Checks whether the block hash satisfies the difficulty  
+- Checks whether the hash is correct  
+- Then executes transactions, outputs information, and adjusts difficulty (if needed)  
+### Adding a transaction to the mempool:
 ```c++
 bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
 
@@ -316,13 +363,13 @@ bool Blockchain::addTransactionToMempool(const Transaction &transactionToAdd){
     return true;
 }
 ```
-- Tikrina ar egzistuoja naudotojai
-- Tikrina perduotu bitkoinu kieki
-- Tikrina siuntejo balansa
-- Tikrina transakcijos hasha
-- Tada ideda transakcija i hashseta ir vektoriu
-- Keicia naudotoju pending balansus (laikini balansai)
-## MerkleRootHash:
+- Checks whether users exist  
+- Checks the transferred bitcoin amount  
+- Checks the sender’s balance  
+- Checks the transaction hash  
+- Then inserts the transaction into the hash set and vector  
+- Updates users’ pending balances (temporary balances)  
+### MerkleRootHash:
 ```c++
 string MerkleRootHash(const vector<Transaction> &transactions) {
     // return empty if no transactions
@@ -348,11 +395,11 @@ string MerkleRootHash(const vector<Transaction> &transactions) {
     return hashes.at(0);
 }
 ```
-- Hashuoja transakciju hashu masyva poromis ir ideda i nauja transakciju masyva
-- Keicia sena masyva i nauja
-- Kartoja kol masyve yra daugiau nei 1 transakcija
-- Jeigu transakciju kiekis yra nelyginis, paskutine transakcija yra hashuojama poroje su juos kopija
-## Lygiagretus kasimas (realizuotas naudojant OpenMP):
+- Hashes the transaction hash array in pairs and places them into a new transaction array  
+- Replaces the old array with the new one  
+- Repeats until the array contains only one transaction  
+- If the number of transactions is odd, the last transaction is hashed together with its copy  
+### Parallel mining (implemented using OpenMP):
 ```c++
 void Case2(Blockchain &Btc) {
     int counter = 0;
@@ -373,15 +420,8 @@ void Case2(Blockchain &Btc) {
     }
 }
 ```
-- Imami 5 miner'iai
-- Jie kartu sukuria blokus ir minina po 5 sekundes ir po to bando prijungti prie bloku grandines
-- Jei blokai neiskasti - jiems neleis prijungti juos
-- Jei kazkas iskase bloka ir pridejo - kiti gali irgi ji iskasti, bet prideti ir gauti rewarda negales (nes ju blokas nepraeis validavimo)
-## AI
-### AI pagalba buvo naudota tokiems zingzniams:
-- Architekturos klausimams (kas sukuria blokus, kas validuoja, kaip transakcijos validuojamos, kaip apsisaugoti nuo double spending attack)
-- Viesu raktu generavimo funkcijai
-- Hash funkcijos pagerinimas kasimui
-- Pagalbai su std::chrono biblioteka
-- OpenMp instaliavimui
-- Protected reference getteriu sukurimui
+- Five miners are selected  
+- They simultaneously create blocks and mine them for 5 seconds, then attempt to attach them to the blockchain  
+- If the blocks are not mined, they will not be allowed to attach them  
+- If someone mines a block and adds it, others may also mine theirs, but they will not be able to add them or receive the reward (because their block will fail validation)  
+
